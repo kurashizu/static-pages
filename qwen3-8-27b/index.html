@@ -452,6 +452,7 @@
   .region .region-marker.qwen { background: var(--purple); width: 18px; height: 18px; box-shadow: 0 0 0 2px var(--purple-dark); z-index: 5; }
   .region .region-marker.open { background: var(--green); }
   .region .region-marker.closed { background: #555; }
+  .region .region-marker.similar { background: var(--gold); border-color: white; }
   .region .region-marker:hover { transform: translate(-50%, -50%) scale(1.4); }
   .region .band {
     position: absolute;
@@ -605,22 +606,30 @@
     <div class="scale">
       <div class="band" style="left: 71.5%; width: 5.7%;"></div>
       <div class="region-marker qwen" style="left: 74.3%;" title="Qwen3.8 27B · II 52.02"></div>
-      <div class="region-marker closed" style="left:90.07142857142857%;" title="Claude Opus 5 · 63.05 · Anthropic"></div>
-      <div class="region-marker closed" style="left:88.67142857142856%;" title="Claude Fable 5 · 62.07 · Anthropic"></div>
-      <div class="region-marker closed" style="left:87.04285714285714%;" title="GPT-5.6 Sol · 60.93 · OpenAI"></div>
-      <div class="region-marker closed" style="left:87.02857142857144%;" title="Grok 4.6 · 60.92 · SpaceXAI"></div>
-      <div class="region-marker open" style="left:85.28571428571429%;" title="Kimi K3 · 59.70 · Kimi"></div>
-      <div class="region-marker closed" style="left:85.0142857142857%;" title="GLM-5.3 · 59.51 · Z AI"></div>
-      <div class="region-marker closed" style="left:82.97142857142858%;" title="Qwen3.8 Max · 58.08 · Alibaba"></div>
-      <div class="region-marker open" style="left:82.42857142857143%;" title="Qwen3.8 2.4T A95B · 57.70 · Alibaba"></div>
-      <div class="region-marker closed" style="left:81.89999999999999%;" title="Claude Opus 4.8 · 57.33 · Anthropic"></div>
-      <div class="region-marker closed" style="left:81.08571428571429%;" title="Muse Spark 1.2 · 56.76 · Meta"></div>
-      <div class="region-marker closed" style="left:80.82857142857142%;" title="GPT-5.6 Terra · 56.58 · OpenAI"></div>
-      <div class="region-marker closed" style="left:80.44285714285715%;" title="GPT-5.5 · 56.31 · OpenAI"></div>
-      <div class="region-marker closed" style="left:80.04285714285714%;" title="Gemini 3.7 Flash · 56.03 · Google"></div>
-      <div class="region-marker closed" style="left:79.65714285714286%;" title="Grok 4.5 · 55.76 · SpaceXAI"></div>
-      <div class="region-marker closed" style="left:78.94285714285714%;" title="Claude Sonnet 5 · 55.26 · Anthropic"></div>
-      <div class="region-marker closed" style="left:78.51428571428572%;" title="Claude Opus 4.7 · 54.96 · Anthropic"></div>
+      <div class="region-marker closed" style="left:90.07142857142857%;" title="Claude Opus 5 (Stronger) · 63.05 · Anthropic"></div>
+      <div class="region-marker closed" style="left:88.67142857142856%;" title="Claude Fable 5 (Stronger) · 62.07 · Anthropic"></div>
+      <div class="region-marker closed" style="left:87.04285714285714%;" title="GPT-5.6 Sol (Stronger) · 60.93 · OpenAI"></div>
+      <div class="region-marker closed" style="left:87.02857142857144%;" title="Grok 4.6 (Stronger) · 60.92 · SpaceXAI"></div>
+      <div class="region-marker open" style="left:85.28571428571429%;" title="Kimi K3 (Stronger) · 59.70 · Kimi"></div>
+      <div class="region-marker closed" style="left:85.0142857142857%;" title="GLM-5.3 (Stronger) · 59.51 · Z AI"></div>
+      <div class="region-marker closed" style="left:82.97142857142858%;" title="Qwen3.8 Max (Stronger) · 58.08 · Alibaba"></div>
+      <div class="region-marker open" style="left:82.42857142857143%;" title="Qwen3.8 2.4T A95B (Stronger) · 57.70 · Alibaba"></div>
+      <div class="region-marker closed" style="left:81.89999999999999%;" title="Claude Opus 4.8 (Stronger) · 57.33 · Anthropic"></div>
+      <div class="region-marker closed" style="left:81.08571428571429%;" title="Muse Spark 1.2 (Stronger) · 56.76 · Meta"></div>
+      <div class="region-marker closed" style="left:80.82857142857142%;" title="GPT-5.6 Terra (Stronger) · 56.58 · OpenAI"></div>
+      <div class="region-marker closed" style="left:80.44285714285715%;" title="GPT-5.5 (Stronger) · 56.31 · OpenAI"></div>
+      <div class="region-marker closed" style="left:80.04285714285714%;" title="Gemini 3.7 Flash (Stronger) · 56.03 · Google"></div>
+      <div class="region-marker closed" style="left:79.65714285714286%;" title="Grok 4.5 (Stronger) · 55.76 · SpaceXAI"></div>
+      <div class="region-marker closed" style="left:78.94285714285714%;" title="Claude Sonnet 5 (Stronger) · 55.26 · Anthropic"></div>
+      <div class="region-marker closed" style="left:78.51428571428572%;" title="Claude Opus 4.7 (Stronger) · 54.96 · Anthropic"></div>
+      <div class="region-marker similar" style="left:76.0%;" title="DeepSeek V4 Pro 0813 (Similar) · 53.20 · DeepSeek"></div>
+      <div class="region-marker similar" style="left:76.0%;" title="Muse Spark 1.1 (Similar) · 53.20 · Meta"></div>
+      <div class="region-marker similar" style="left:75.88571428571427%;" title="GPT-5.4 (Similar) · 53.12 · OpenAI"></div>
+      <div class="region-marker similar" style="left:75.2%;" title="GLM-5.2 (Similar) · 52.64 · Z AI"></div>
+      <div class="region-marker similar" style="left:74.74285714285715%;" title="GPT-5.6 Luna (Similar) · 52.32 · OpenAI"></div>
+      <div class="region-marker similar" style="left:74.22857142857143%;" title="Gemini 3.5 Flash (Similar) · 51.96 · Google"></div>
+      <div class="region-marker similar" style="left:73.95714285714287%;" title="DeepSeek V4 Flash 0731 (Similar) · 51.77 · DeepSeek"></div>
+      <div class="region-marker similar" style="left:73.68571428571428%;" title="Gemini 3.6 Flash (Similar) · 51.58 · Google"></div>
       <div class="band-label" style="left: 74.3%; top: 4px;">&plusmn; 2 II</div>
     </div>
     <div class="axis-num" style="left:0%;">0</div>
@@ -636,9 +645,9 @@
   </div>
   <div class="legend-bar">
     <div class="item"><span class="sw" style="background:var(--purple)"></span>Qwen3.8 27B</div>
-    <div class="item"><span class="sw" style="background:var(--green)"></span><en>Stronger open-weight</en><zh>更强的开源</zh></div>
-    <div class="item"><span class="sw" style="background:#555"></span><en>Stronger closed</en><zh>更强的闭源</zh></div>
-    <div class="item"><span class="sw" style="background:rgba(91,44,145,0.18); border:1px dashed var(--purple)"></span><en>Similar band (± 2 II)</en><zh>相当区间（± 2 II）</zh></div>
+    <div class="item"><span class="sw" style="background:var(--green)"></span><en>Stronger open</en><zh>更强开源</zh></div>
+    <div class="item"><span class="sw" style="background:#555"></span><en>Stronger closed</en><zh>更强闭源</zh></div>
+    <div class="item"><span class="sw" style="background:var(--gold)"></span><en>Similar (± 2 II)</en><zh>相当 (± 2 II)</zh></div>
   </div>
 </div>
 
