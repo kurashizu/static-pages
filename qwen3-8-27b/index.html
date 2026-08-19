@@ -486,6 +486,57 @@
     color: var(--ink-faint);
   }
 
+  /* hover card (tooltip) */
+  .hover-card {
+    position: fixed;
+    z-index: 300;
+    pointer-events: none;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.16);
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    min-width: 150px;
+    max-width: 260px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+  }
+  .hover-card.show { opacity: 1; transform: translateY(0); }
+  .hover-card .hc-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  .hover-card .hc-badges {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .hover-card .hc-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: white;
+  }
+  .hover-card .hc-badge.kind-stronger { background: #b3261e; }
+  .hover-card .hc-badge.kind-similar { background: var(--gold); }
+  .hover-card .hc-badge.kind-anchor { background: var(--purple); }
+  .hover-card .hc-badge.t-open { background: var(--green); }
+  .hover-card .hc-badge.t-closed { background: #555; }
+  .hover-card .hc-badge.t-both { background: #946a2f; }
+  .hover-card .hc-line {
+    color: var(--ink-dim);
+    font-size: 11px;
+  }
+
   footer {
     margin: 36px 0 0;
     padding: 16px 0 0;
@@ -605,37 +656,37 @@
 </div>
 
 <!---- VISUAL ---->
-<div class="region">
+<div class="region" id="ii-scale">
   <h4><en>Competitive position on the II scale (0 – 70)</en><zh>在 II 标尺（0 – 70）上的竞争位置</zh></h4>
   <div style="position:relative; padding-top: 26px;">
     <div class="tick-lbl target" style="left: 74.3%; top: 0;">Qwen 52</div>
     <div class="scale">
       <div class="band" style="left: 71.5%; width: 5.7%;"></div>
-      <div class="region-marker qwen" style="left: 74.3%; top: 50%;" title="Qwen3.8 27B · II 52.02"></div>
-      <div class="region-marker similar" style="left:73.68571428571428%; top:8px;" title="Gemini 3.6 Flash (Similar) · 51.58 · Google"></div>
-      <div class="region-marker similar" style="left:73.95714285714287%; top:50%;" title="DeepSeek V4 Flash 0731 (Similar) · 51.77 · DeepSeek"></div>
-      <div class="region-marker similar" style="left:74.22857142857143%; top:calc(100% - 8px);" title="Gemini 3.5 Flash (Similar) · 51.96 · Google"></div>
-      <div class="region-marker similar" style="left:74.74285714285715%; top:8px;" title="GPT-5.6 Luna (Similar) · 52.32 · OpenAI"></div>
-      <div class="region-marker similar" style="left:75.2%; top:50%;" title="GLM-5.2 (Similar) · 52.64 · Z AI"></div>
-      <div class="region-marker similar" style="left:75.88571428571427%; top:calc(100% - 8px);" title="GPT-5.4 (Similar) · 53.12 · OpenAI"></div>
-      <div class="region-marker similar" style="left:76.0%; top:8px;" title="DeepSeek V4 Pro 0813 (Similar) · 53.20 · DeepSeek"></div>
-      <div class="region-marker similar" style="left:76.0%; top:50%;" title="Muse Spark 1.1 (Similar) · 53.20 · Meta"></div>
-      <div class="region-marker closed" style="left:78.51428571428572%; top:calc(100% - 8px);" title="Claude Opus 4.7 (Stronger) · 54.96 · Anthropic"></div>
-      <div class="region-marker closed" style="left:78.94285714285714%; top:8px;" title="Claude Sonnet 5 (Stronger) · 55.26 · Anthropic"></div>
-      <div class="region-marker closed" style="left:79.65714285714286%; top:50%;" title="Grok 4.5 (Stronger) · 55.76 · SpaceXAI"></div>
-      <div class="region-marker closed" style="left:80.04285714285714%; top:calc(100% - 8px);" title="Gemini 3.7 Flash (Stronger) · 56.03 · Google"></div>
-      <div class="region-marker closed" style="left:80.44285714285715%; top:8px;" title="GPT-5.5 (Stronger) · 56.31 · OpenAI"></div>
-      <div class="region-marker closed" style="left:80.82857142857142%; top:50%;" title="GPT-5.6 Terra (Stronger) · 56.58 · OpenAI"></div>
-      <div class="region-marker closed" style="left:81.08571428571429%; top:calc(100% - 8px);" title="Muse Spark 1.2 (Stronger) · 56.76 · Meta"></div>
-      <div class="region-marker closed" style="left:81.89999999999999%; top:8px;" title="Claude Opus 4.8 (Stronger) · 57.33 · Anthropic"></div>
-      <div class="region-marker open" style="left:82.42857142857143%; top:50%;" title="Qwen3.8 2.4T A95B (Stronger) · 57.70 · Alibaba"></div>
-      <div class="region-marker closed" style="left:82.97142857142858%; top:calc(100% - 8px);" title="Qwen3.8 Max (Stronger) · 58.08 · Alibaba"></div>
-      <div class="region-marker closed" style="left:85.0142857142857%; top:8px;" title="GLM-5.3 (Stronger) · 59.51 · Z AI"></div>
-      <div class="region-marker open" style="left:85.28571428571429%; top:50%;" title="Kimi K3 (Stronger) · 59.70 · Kimi"></div>
-      <div class="region-marker closed" style="left:87.02857142857144%; top:calc(100% - 8px);" title="Grok 4.6 (Stronger) · 60.92 · SpaceXAI"></div>
-      <div class="region-marker closed" style="left:87.04285714285714%; top:8px;" title="GPT-5.6 Sol (Stronger) · 60.93 · OpenAI"></div>
-      <div class="region-marker closed" style="left:88.67142857142856%; top:50%;" title="Claude Fable 5 (Stronger) · 62.07 · Anthropic"></div>
-      <div class="region-marker closed" style="left:90.07142857142857%; top:calc(100% - 8px);" title="Claude Opus 5 (Stronger) · 63.05 · Anthropic"></div>
+      <div class="region-marker qwen" style="left: 74.3%; top: 50%;" data-name="Qwen3.8 27B" data-kind="Anchor" data-type="open" data-ii="52.02" data-creator="Alibaba"></div>
+      <div class="region-marker similar" style="left:73.68571428571428%; top:8px;" data-name="Gemini 3.6 Flash" data-kind="Similar" data-type="closed" data-ii="51.58" data-creator="Google" aria-label="Gemini 3.6 Flash"></div>
+      <div class="region-marker similar" style="left:73.95714285714287%; top:50%;" data-name="DeepSeek V4 Flash 0731" data-kind="Similar" data-type="open" data-ii="51.77" data-creator="DeepSeek" aria-label="DeepSeek V4 Flash 0731"></div>
+      <div class="region-marker similar" style="left:74.22857142857143%; top:calc(100% - 8px);" data-name="Gemini 3.5 Flash" data-kind="Similar" data-type="closed" data-ii="51.96" data-creator="Google" aria-label="Gemini 3.5 Flash"></div>
+      <div class="region-marker similar" style="left:74.74285714285715%; top:8px;" data-name="GPT-5.6 Luna" data-kind="Similar" data-type="closed" data-ii="52.32" data-creator="OpenAI" aria-label="GPT-5.6 Luna"></div>
+      <div class="region-marker similar" style="left:75.2%; top:50%;" data-name="GLM-5.2" data-kind="Similar" data-type="open" data-ii="52.64" data-creator="Z AI" aria-label="GLM-5.2"></div>
+      <div class="region-marker similar" style="left:75.88571428571427%; top:calc(100% - 8px);" data-name="GPT-5.4" data-kind="Similar" data-type="closed" data-ii="53.12" data-creator="OpenAI" aria-label="GPT-5.4"></div>
+      <div class="region-marker similar" style="left:76.0%; top:8px;" data-name="DeepSeek V4 Pro 0813" data-kind="Similar" data-type="open" data-ii="53.20" data-creator="DeepSeek" aria-label="DeepSeek V4 Pro 0813"></div>
+      <div class="region-marker similar" style="left:76.0%; top:50%;" data-name="Muse Spark 1.1" data-kind="Similar" data-type="closed" data-ii="53.20" data-creator="Meta" aria-label="Muse Spark 1.1"></div>
+      <div class="region-marker closed" style="left:78.51428571428572%; top:calc(100% - 8px);" data-name="Claude Opus 4.7" data-kind="Stronger" data-type="closed" data-ii="54.96" data-creator="Anthropic" aria-label="Claude Opus 4.7"></div>
+      <div class="region-marker closed" style="left:78.94285714285714%; top:8px;" data-name="Claude Sonnet 5" data-kind="Stronger" data-type="closed" data-ii="55.26" data-creator="Anthropic" aria-label="Claude Sonnet 5"></div>
+      <div class="region-marker closed" style="left:79.65714285714286%; top:50%;" data-name="Grok 4.5" data-kind="Stronger" data-type="closed" data-ii="55.76" data-creator="SpaceXAI" aria-label="Grok 4.5"></div>
+      <div class="region-marker closed" style="left:80.04285714285714%; top:calc(100% - 8px);" data-name="Gemini 3.7 Flash" data-kind="Stronger" data-type="closed" data-ii="56.03" data-creator="Google" aria-label="Gemini 3.7 Flash"></div>
+      <div class="region-marker closed" style="left:80.44285714285715%; top:8px;" data-name="GPT-5.5" data-kind="Stronger" data-type="closed" data-ii="56.31" data-creator="OpenAI" aria-label="GPT-5.5"></div>
+      <div class="region-marker closed" style="left:80.82857142857142%; top:50%;" data-name="GPT-5.6 Terra" data-kind="Stronger" data-type="closed" data-ii="56.58" data-creator="OpenAI" aria-label="GPT-5.6 Terra"></div>
+      <div class="region-marker closed" style="left:81.08571428571429%; top:calc(100% - 8px);" data-name="Muse Spark 1.2" data-kind="Stronger" data-type="closed" data-ii="56.76" data-creator="Meta" aria-label="Muse Spark 1.2"></div>
+      <div class="region-marker closed" style="left:81.89999999999999%; top:8px;" data-name="Claude Opus 4.8" data-kind="Stronger" data-type="closed" data-ii="57.33" data-creator="Anthropic" aria-label="Claude Opus 4.8"></div>
+      <div class="region-marker open" style="left:82.42857142857143%; top:50%;" data-name="Qwen3.8 2.4T A95B" data-kind="Stronger" data-type="open" data-ii="57.70" data-creator="Alibaba" aria-label="Qwen3.8 2.4T A95B"></div>
+      <div class="region-marker closed" style="left:82.97142857142858%; top:calc(100% - 8px);" data-name="Qwen3.8 Max" data-kind="Stronger" data-type="closed" data-ii="58.08" data-creator="Alibaba" aria-label="Qwen3.8 Max"></div>
+      <div class="region-marker closed" style="left:85.0142857142857%; top:8px;" data-name="GLM-5.3" data-kind="Stronger" data-type="closed" data-ii="59.51" data-creator="Z AI" aria-label="GLM-5.3"></div>
+      <div class="region-marker open" style="left:85.28571428571429%; top:50%;" data-name="Kimi K3" data-kind="Stronger" data-type="open" data-ii="59.70" data-creator="Kimi" aria-label="Kimi K3"></div>
+      <div class="region-marker closed" style="left:87.02857142857144%; top:calc(100% - 8px);" data-name="Grok 4.6" data-kind="Stronger" data-type="closed" data-ii="60.92" data-creator="SpaceXAI" aria-label="Grok 4.6"></div>
+      <div class="region-marker closed" style="left:87.04285714285714%; top:8px;" data-name="GPT-5.6 Sol" data-kind="Stronger" data-type="closed" data-ii="60.93" data-creator="OpenAI" aria-label="GPT-5.6 Sol"></div>
+      <div class="region-marker closed" style="left:88.67142857142856%; top:50%;" data-name="Claude Fable 5" data-kind="Stronger" data-type="closed" data-ii="62.07" data-creator="Anthropic" aria-label="Claude Fable 5"></div>
+      <div class="region-marker closed" style="left:90.07142857142857%; top:calc(100% - 8px);" data-name="Claude Opus 5" data-kind="Stronger" data-type="closed" data-ii="63.05" data-creator="Anthropic" aria-label="Claude Opus 5"></div>
     </div>
     <div class="scale-axis">
       <div class="axis-num" style="left:0%; transform: none;">0</div>
@@ -3077,6 +3128,12 @@
 
 </div>
 
+<div id="hover-card" class="hover-card">
+  <div class="hc-name"></div>
+  <div class="hc-badges"><span class="hc-badge"></span></div>
+  <div class="hc-line"></div>
+</div>
+
 <script>
 (function () {
   const STORAGE_KEY = 'aa-chart-lang';
@@ -3097,6 +3154,51 @@
   }
   document.querySelectorAll('.lang-bar a').forEach(a => {
     a.addEventListener('click', e => { e.preventDefault(); setLang(a.dataset.setLang); });
+  });
+
+  // Hover card for II scale markers
+  const tip = document.getElementById('hover-card');
+  const tipName = tip.querySelector('.hc-name');
+  const tipBadges = tip.querySelector('.hc-badges');
+  const tipLine = tip.querySelector('.hc-line');
+  const KIND_TEXT = {
+    en: { Stronger: 'Stronger', Similar: 'Similar ± 2 II', Anchor: 'Anchor' },
+    zh: { Stronger: '强于 Qwen', Similar: '相当 ±2 II', Anchor: '基准模型' },
+  };
+  const TYPE_TEXT = {
+    en: { open: 'Open weights', closed: 'Closed', both: 'Open + Closed' },
+    zh: { open: '开源权重', closed: '闭源', both: '开源 + 闭源' },
+  };
+  const II_TEXT = { en: 'II', zh: 'II' };
+  function showTip(m) {
+    const lang = document.body.dataset.lang === 'zh' ? 'zh' : 'en';
+    const kind = m.dataset.kind;
+    const type = m.dataset.type;
+    tipName.textContent = m.dataset.name;
+    tipBadges.innerHTML = '';
+    const kindBadge = document.createElement('span');
+    kindBadge.className = 'hc-badge kind-' + kind.toLowerCase();
+    kindBadge.textContent = (KIND_TEXT[lang][kind] || kind);
+    const typeBadge = document.createElement('span');
+    typeBadge.className = 'hc-badge t-' + type;
+    typeBadge.textContent = TYPE_TEXT[lang][type] || type;
+    tipBadges.appendChild(kindBadge);
+    tipBadges.appendChild(typeBadge);
+    tipLine.textContent = II_TEXT[lang] + ' ' + m.dataset.ii + '  ·  ' + m.dataset.creator;
+    tip.classList.add('show');
+    const r = m.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = r.left + r.width / 2 - tw / 2;
+    x = Math.max(8, Math.min(window.innerWidth - tw - 8, x));
+    let y = r.top - th - 8;
+    if (y < 8) y = r.bottom + 8;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  function hideTip() { tip.classList.remove('show'); }
+  document.querySelectorAll('.region-marker[data-name]').forEach(m => {
+    m.addEventListener('mouseenter', () => showTip(m));
+    m.addEventListener('mouseleave', hideTip);
   });
   // initial: URL > localStorage > en
   let initial = 'en';
