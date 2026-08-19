@@ -3,12 +3,12 @@
 A personal collection of self-contained HTML reports and interactive charts,
 hosted via GitHub Pages.
 
-🌐 **Live**: <https://kurashizu.github.io/static-pages/>
+🌐 **Live**: <http://ghp.krsz.in/> (custom domain)
 
 ## Pages
 
 ### 📄 Qwen3.8 27B Competitive Intelligence Report
-- **URL**: <https://kurashizu.github.io/static-pages/qwen3-8-27b-report/>
+- **URL**: <http://ghp.krsz.in/qwen3-8-27b-report/>
 - **Date**: 2026-08
 - **Inputs**: All 610 models on Artificial Analysis Intelligence Index v4.1.1
 - **Files**:
@@ -41,3 +41,5 @@ hosted via GitHub Pages.
 - All pages are **self-contained** — no build step, no dependencies
 - CDN libraries (D3.js) are pulled from jsdelivr at runtime
 - Reports include raw data tables and methodology notes
+- Served via GitHub Pages from the `main` branch, root path
+- Custom domain: `ghp.krsz.in` (CNAME)
