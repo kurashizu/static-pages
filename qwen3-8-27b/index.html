@@ -532,9 +532,18 @@
   .hover-card .hc-badge.t-open { background: var(--green); }
   .hover-card .hc-badge.t-closed { background: #555; }
   .hover-card .hc-badge.t-both { background: #946a2f; }
+  .hover-card .hc-badge.t-reasoning { background: var(--purple); }
+  .hover-card .hc-badge.t-country { background: #e8e6df; color: var(--ink-dim); text-transform: none; letter-spacing: 0.3px; }
   .hover-card .hc-line {
     color: var(--ink-dim);
     font-size: 11px;
+  }
+  .hover-card .hc-sub {
+    margin-top: 3px;
+    color: var(--ink-faint);
+    font-size: 10px;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   footer {
@@ -732,7 +741,7 @@
       <th><en>Cost</en><zh>成本</zh></th>
     </tr>
   </thead>
-  <tbody class="only-en"><tr class="mrow">
+  <tbody class="only-en"><tr class="mrow" data-name="Claude Opus 5" data-creator="Anthropic" data-country="US" data-ii="63.05" data-diff="+11.03" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.3369" data-sub="high, low, medium, xhigh">
   <td class="ii">63.05</td>
   <td class="diff-cell"><span class="diff pos">+11.03</span></td>
   <td class="name">
@@ -745,7 +754,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$2.3369</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Fable 5" data-creator="Anthropic" data-country="US" data-ii="62.07" data-diff="+10.05" data-params="large" data-type="closed" data-reasoning="1" data-cost="$3.1396" data-sub="—">
   <td class="ii">62.07</td>
   <td class="diff-cell"><span class="diff pos">+10.05</span></td>
   <td class="name">
@@ -758,7 +767,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$3.1396</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Sol" data-creator="OpenAI" data-country="US" data-ii="60.93" data-diff="+8.91" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.2312" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">60.93</td>
   <td class="diff-cell"><span class="diff pos">+8.91</span></td>
   <td class="name">
@@ -771,7 +780,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.2312</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.6" data-creator="SpaceXAI" data-country="US" data-ii="60.92" data-diff="+8.90" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.8367" data-sub="—">
   <td class="ii">60.92</td>
   <td class="diff-cell"><span class="diff pos">+8.90</span></td>
   <td class="name">
@@ -784,7 +793,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.8367</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K3" data-creator="Kimi" data-country="CN" data-ii="59.70" data-diff="+7.68" data-params="2800B" data-type="open" data-reasoning="1" data-cost="$0.8375" data-sub="low">
   <td class="ii">59.70</td>
   <td class="diff-cell"><span class="diff pos">+7.68</span></td>
   <td class="name">
@@ -797,7 +806,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.8375</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.3" data-creator="Z AI" data-country="CN" data-ii="59.51" data-diff="+7.49" data-params="753B" data-type="closed" data-reasoning="1" data-cost="$0.6829" data-sub="—">
   <td class="ii">59.51</td>
   <td class="diff-cell"><span class="diff pos">+7.49</span></td>
   <td class="name">
@@ -810,7 +819,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.6829</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.8 Max" data-creator="Alibaba" data-country="CN" data-ii="58.08" data-diff="+6.06" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1320" data-sub="—">
   <td class="ii">58.08</td>
   <td class="diff-cell"><span class="diff pos">+6.06</span></td>
   <td class="name">
@@ -823,7 +832,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.1320</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.8 2.4T A95B" data-creator="Alibaba" data-country="CN" data-ii="57.70" data-diff="+5.68" data-params="2400B" data-type="open" data-reasoning="1" data-cost="$1.0919" data-sub="—">
   <td class="ii">57.70</td>
   <td class="diff-cell"><span class="diff pos">+5.68</span></td>
   <td class="name">
@@ -836,7 +845,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.0919</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.8" data-creator="Anthropic" data-country="US" data-ii="57.33" data-diff="+5.31" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.0315" data-sub="—">
   <td class="ii">57.33</td>
   <td class="diff-cell"><span class="diff pos">+5.31</span></td>
   <td class="name">
@@ -849,7 +858,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$2.0315</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark 1.2" data-creator="Meta" data-country="US" data-ii="56.76" data-diff="+4.74" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3992" data-sub="—">
   <td class="ii">56.76</td>
   <td class="diff-cell"><span class="diff pos">+4.74</span></td>
   <td class="name">
@@ -862,7 +871,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3992</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Terra" data-creator="OpenAI" data-country="US" data-ii="56.58" data-diff="+4.56" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.5080" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">56.58</td>
   <td class="diff-cell"><span class="diff pos">+4.56</span></td>
   <td class="name">
@@ -875,7 +884,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.5080</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.5" data-creator="OpenAI" data-country="US" data-ii="56.31" data-diff="+4.29" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1747" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">56.31</td>
   <td class="diff-cell"><span class="diff pos">+4.29</span></td>
   <td class="name">
@@ -888,7 +897,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.1747</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.7 Flash" data-creator="Google" data-country="US" data-ii="56.03" data-diff="+4.01" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4022" data-sub="low, medium">
   <td class="ii">56.03</td>
   <td class="diff-cell"><span class="diff pos">+4.01</span></td>
   <td class="name">
@@ -901,7 +910,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.4022</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.5" data-creator="SpaceXAI" data-country="US" data-ii="55.76" data-diff="+3.74" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3601" data-sub="—">
   <td class="ii">55.76</td>
   <td class="diff-cell"><span class="diff pos">+3.74</span></td>
   <td class="name">
@@ -914,7 +923,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3601</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Sonnet 5" data-creator="Anthropic" data-country="US" data-ii="55.26" data-diff="+3.24" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.7173" data-sub="Non-reasoning">
   <td class="ii">55.26</td>
   <td class="diff-cell"><span class="diff pos">+3.24</span></td>
   <td class="name">
@@ -927,7 +936,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.7173</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.7" data-creator="Anthropic" data-country="US" data-ii="54.96" data-diff="+2.94" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.2285" data-sub="Non-reasoning, high">
   <td class="ii">54.96</td>
   <td class="diff-cell"><span class="diff pos">+2.94</span></td>
   <td class="name">
@@ -940,7 +949,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$2.2285</td>
 </tr></tbody>
-  <tbody class="only-zh"><tr class="mrow">
+  <tbody class="only-zh"><tr class="mrow" data-name="Claude Opus 5" data-creator="Anthropic" data-country="美国" data-ii="63.05" data-diff="+11.03" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.3369" data-sub="high, low, medium, xhigh">
   <td class="ii">63.05</td>
   <td class="diff-cell"><span class="diff pos">+11.03</span></td>
   <td class="name">
@@ -953,7 +962,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$2.3369</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Fable 5" data-creator="Anthropic" data-country="美国" data-ii="62.07" data-diff="+10.05" data-params="large" data-type="closed" data-reasoning="1" data-cost="$3.1396" data-sub="—">
   <td class="ii">62.07</td>
   <td class="diff-cell"><span class="diff pos">+10.05</span></td>
   <td class="name">
@@ -966,7 +975,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$3.1396</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Sol" data-creator="OpenAI" data-country="美国" data-ii="60.93" data-diff="+8.91" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.2312" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">60.93</td>
   <td class="diff-cell"><span class="diff pos">+8.91</span></td>
   <td class="name">
@@ -979,7 +988,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.2312</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.6" data-creator="SpaceXAI" data-country="美国" data-ii="60.92" data-diff="+8.90" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.8367" data-sub="—">
   <td class="ii">60.92</td>
   <td class="diff-cell"><span class="diff pos">+8.90</span></td>
   <td class="name">
@@ -992,7 +1001,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.8367</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K3" data-creator="Kimi" data-country="中国" data-ii="59.70" data-diff="+7.68" data-params="2800B" data-type="open" data-reasoning="1" data-cost="$0.8375" data-sub="low">
   <td class="ii">59.70</td>
   <td class="diff-cell"><span class="diff pos">+7.68</span></td>
   <td class="name">
@@ -1005,7 +1014,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.8375</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.3" data-creator="Z AI" data-country="中国" data-ii="59.51" data-diff="+7.49" data-params="753B" data-type="closed" data-reasoning="1" data-cost="$0.6829" data-sub="—">
   <td class="ii">59.51</td>
   <td class="diff-cell"><span class="diff pos">+7.49</span></td>
   <td class="name">
@@ -1018,7 +1027,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.6829</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.8 Max" data-creator="Alibaba" data-country="中国" data-ii="58.08" data-diff="+6.06" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1320" data-sub="—">
   <td class="ii">58.08</td>
   <td class="diff-cell"><span class="diff pos">+6.06</span></td>
   <td class="name">
@@ -1031,7 +1040,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.1320</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.8 2.4T A95B" data-creator="Alibaba" data-country="中国" data-ii="57.70" data-diff="+5.68" data-params="2400B" data-type="open" data-reasoning="1" data-cost="$1.0919" data-sub="—">
   <td class="ii">57.70</td>
   <td class="diff-cell"><span class="diff pos">+5.68</span></td>
   <td class="name">
@@ -1044,7 +1053,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.0919</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.8" data-creator="Anthropic" data-country="美国" data-ii="57.33" data-diff="+5.31" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.0315" data-sub="—">
   <td class="ii">57.33</td>
   <td class="diff-cell"><span class="diff pos">+5.31</span></td>
   <td class="name">
@@ -1057,7 +1066,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$2.0315</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark 1.2" data-creator="Meta" data-country="美国" data-ii="56.76" data-diff="+4.74" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3992" data-sub="—">
   <td class="ii">56.76</td>
   <td class="diff-cell"><span class="diff pos">+4.74</span></td>
   <td class="name">
@@ -1070,7 +1079,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3992</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Terra" data-creator="OpenAI" data-country="美国" data-ii="56.58" data-diff="+4.56" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.5080" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">56.58</td>
   <td class="diff-cell"><span class="diff pos">+4.56</span></td>
   <td class="name">
@@ -1083,7 +1092,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.5080</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.5" data-creator="OpenAI" data-country="美国" data-ii="56.31" data-diff="+4.29" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1747" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">56.31</td>
   <td class="diff-cell"><span class="diff pos">+4.29</span></td>
   <td class="name">
@@ -1096,7 +1105,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.1747</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.7 Flash" data-creator="Google" data-country="美国" data-ii="56.03" data-diff="+4.01" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4022" data-sub="low, medium">
   <td class="ii">56.03</td>
   <td class="diff-cell"><span class="diff pos">+4.01</span></td>
   <td class="name">
@@ -1109,7 +1118,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.4022</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.5" data-creator="SpaceXAI" data-country="美国" data-ii="55.76" data-diff="+3.74" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3601" data-sub="—">
   <td class="ii">55.76</td>
   <td class="diff-cell"><span class="diff pos">+3.74</span></td>
   <td class="name">
@@ -1122,7 +1131,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3601</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Sonnet 5" data-creator="Anthropic" data-country="美国" data-ii="55.26" data-diff="+3.24" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.7173" data-sub="Non-reasoning">
   <td class="ii">55.26</td>
   <td class="diff-cell"><span class="diff pos">+3.24</span></td>
   <td class="name">
@@ -1135,7 +1144,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.7173</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.7" data-creator="Anthropic" data-country="美国" data-ii="54.96" data-diff="+2.94" data-params="large" data-type="closed" data-reasoning="1" data-cost="$2.2285" data-sub="Non-reasoning, high">
   <td class="ii">54.96</td>
   <td class="diff-cell"><span class="diff pos">+2.94</span></td>
   <td class="name">
@@ -1202,7 +1211,7 @@
       <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
       <td class="num cost"><span class="na">N/A</span></td>
     </tr>
-    <tr class="mrow">
+    <tr class="mrow" data-name="DeepSeek V4 Pro 0813" data-creator="DeepSeek" data-country="CN" data-ii="53.20" data-diff="+1.18" data-params="1600B" data-type="open" data-reasoning="1" data-cost="$0.2521" data-sub="—">
   <td class="ii">53.20</td>
   <td class="diff-cell"><span class="diff pos">+1.18</span></td>
   <td class="name">
@@ -1215,7 +1224,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2521</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark 1.1" data-creator="Meta" data-country="US" data-ii="53.20" data-diff="+1.18" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2923" data-sub="—">
   <td class="ii">53.20</td>
   <td class="diff-cell"><span class="diff pos">+1.18</span></td>
   <td class="name">
@@ -1228,7 +1237,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2923</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4" data-creator="OpenAI" data-country="US" data-ii="53.12" data-diff="+1.10" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1038" data-sub="Non-reasoning, low">
   <td class="ii">53.12</td>
   <td class="diff-cell"><span class="diff pos">+1.10</span></td>
   <td class="name">
@@ -1241,7 +1250,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.1038</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.2" data-creator="Z AI" data-country="CN" data-ii="52.64" data-diff="+0.62" data-params="753B" data-type="open" data-reasoning="1" data-cost="$0.4445" data-sub="—">
   <td class="ii">52.64</td>
   <td class="diff-cell"><span class="diff pos">+0.62</span></td>
   <td class="name">
@@ -1254,7 +1263,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.4445</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Luna" data-creator="OpenAI" data-country="US" data-ii="52.32" data-diff="+0.30" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.0471" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">52.32</td>
   <td class="diff-cell"><span class="diff pos">+0.30</span></td>
   <td class="name">
@@ -1267,7 +1276,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0471</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.5 Flash" data-creator="Google" data-country="US" data-ii="51.96" data-diff="-0.06" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.6934" data-sub="medium, minimal">
   <td class="ii">51.96</td>
   <td class="diff-cell"><span class="diff neg">-0.06</span></td>
   <td class="name">
@@ -1280,7 +1289,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.6934</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Flash 0731" data-creator="DeepSeek" data-country="CN" data-ii="51.77" data-diff="-0.25" data-params="284B" data-type="open" data-reasoning="1" data-cost="$0.1122" data-sub="—">
   <td class="ii">51.77</td>
   <td class="diff-cell"><span class="diff neg">-0.25</span></td>
   <td class="name">
@@ -1293,7 +1302,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.1122</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.6 Flash" data-creator="Google" data-country="US" data-ii="51.58" data-diff="-0.44" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3442" data-sub="—">
   <td class="ii">51.58</td>
   <td class="diff-cell"><span class="diff neg">-0.44</span></td>
   <td class="name">
@@ -1318,7 +1327,7 @@
       <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
       <td class="num cost"><span class="na">暂无</span></td>
     </tr>
-    <tr class="mrow">
+    <tr class="mrow" data-name="DeepSeek V4 Pro 0813" data-creator="DeepSeek" data-country="中国" data-ii="53.20" data-diff="+1.18" data-params="1600B" data-type="open" data-reasoning="1" data-cost="$0.2521" data-sub="—">
   <td class="ii">53.20</td>
   <td class="diff-cell"><span class="diff pos">+1.18</span></td>
   <td class="name">
@@ -1331,7 +1340,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2521</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark 1.1" data-creator="Meta" data-country="美国" data-ii="53.20" data-diff="+1.18" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2923" data-sub="—">
   <td class="ii">53.20</td>
   <td class="diff-cell"><span class="diff pos">+1.18</span></td>
   <td class="name">
@@ -1344,7 +1353,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2923</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4" data-creator="OpenAI" data-country="美国" data-ii="53.12" data-diff="+1.10" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.1038" data-sub="Non-reasoning, low">
   <td class="ii">53.12</td>
   <td class="diff-cell"><span class="diff pos">+1.10</span></td>
   <td class="name">
@@ -1357,7 +1366,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.1038</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.2" data-creator="Z AI" data-country="中国" data-ii="52.64" data-diff="+0.62" data-params="753B" data-type="open" data-reasoning="1" data-cost="$0.4445" data-sub="—">
   <td class="ii">52.64</td>
   <td class="diff-cell"><span class="diff pos">+0.62</span></td>
   <td class="name">
@@ -1370,7 +1379,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.4445</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.6 Luna" data-creator="OpenAI" data-country="美国" data-ii="52.32" data-diff="+0.30" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.0471" data-sub="Non-reasoning, high, low, medium">
   <td class="ii">52.32</td>
   <td class="diff-cell"><span class="diff pos">+0.30</span></td>
   <td class="name">
@@ -1383,7 +1392,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0471</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.5 Flash" data-creator="Google" data-country="美国" data-ii="51.96" data-diff="-0.06" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.6934" data-sub="medium, minimal">
   <td class="ii">51.96</td>
   <td class="diff-cell"><span class="diff neg">-0.06</span></td>
   <td class="name">
@@ -1396,7 +1405,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.6934</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Flash 0731" data-creator="DeepSeek" data-country="中国" data-ii="51.77" data-diff="-0.25" data-params="284B" data-type="open" data-reasoning="1" data-cost="$0.1122" data-sub="—">
   <td class="ii">51.77</td>
   <td class="diff-cell"><span class="diff neg">-0.25</span></td>
   <td class="name">
@@ -1409,7 +1418,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.1122</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.6 Flash" data-creator="Google" data-country="美国" data-ii="51.58" data-diff="-0.44" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3442" data-sub="—">
   <td class="ii">51.58</td>
   <td class="diff-cell"><span class="diff neg">-0.44</span></td>
   <td class="name">
@@ -1472,7 +1481,7 @@
       <th><en>Cost</en><zh>成本</zh></th>
     </tr>
   </thead>
-  <tbody class="only-en"><tr class="mrow">
+  <tbody class="only-en"><tr class="mrow" data-name="Claude Sonnet 4.6" data-creator="Anthropic" data-country="US" data-ii="48.37" data-diff="-3.65" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.2182" data-sub="Non-reasoning, Non-reasoning, Low Effort">
   <td class="ii">48.37</td>
   <td class="diff-cell"><span class="diff neg">-3.65</span></td>
   <td class="name">
@@ -1485,7 +1494,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$1.2182</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.1 Pro Preview" data-creator="Google" data-country="US" data-ii="47.74" data-diff="-4.28" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3346" data-sub="—">
   <td class="ii">47.74</td>
   <td class="diff-cell"><span class="diff neg">-4.28</span></td>
   <td class="name">
@@ -1498,7 +1507,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3346</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Motif 3" data-creator="Motif Technologies" data-country="KR" data-ii="47.36" data-diff="-4.66" data-params="314B" data-type="both" data-reasoning="1" data-cost="N/A" data-sub="Beta">
   <td class="ii">47.36</td>
   <td class="diff-cell"><span class="diff neg">-4.66</span></td>
   <td class="name">
@@ -1511,7 +1520,7 @@
   <td class="types"><span class="badge both">c/o</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.7 Max" data-creator="Alibaba" data-country="CN" data-ii="46.71" data-diff="-5.31" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.5413" data-sub="—">
   <td class="ii">46.71</td>
   <td class="diff-cell"><span class="diff neg">-5.31</span></td>
   <td class="name">
@@ -1524,7 +1533,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.5413</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.3 Codex" data-creator="OpenAI" data-country="US" data-ii="45.51" data-diff="-6.51" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">45.51</td>
   <td class="diff-cell"><span class="diff neg">-6.51</span></td>
   <td class="name">
@@ -1537,7 +1546,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M3" data-creator="MiniMax" data-country="CN" data-ii="45.40" data-diff="-6.62" data-params="428B" data-type="open" data-reasoning="1" data-cost="$0.1387" data-sub="—">
   <td class="ii">45.40</td>
   <td class="diff-cell"><span class="diff neg">-6.62</span></td>
   <td class="name">
@@ -1550,7 +1559,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.1387</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Pro" data-creator="DeepSeek" data-country="CN" data-ii="45.27" data-diff="-6.75" data-params="1600B" data-type="open" data-reasoning="1" data-cost="$0.0474" data-sub=", high">
   <td class="ii">45.27</td>
   <td class="diff-cell"><span class="diff neg">-6.75</span></td>
   <td class="name">
@@ -1563,7 +1572,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0474</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.6" data-creator="Kimi" data-country="CN" data-ii="45.14" data-diff="-6.88" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.3653" data-sub="—">
   <td class="ii">45.14</td>
   <td class="diff-cell"><span class="diff neg">-6.88</span></td>
   <td class="name">
@@ -1576,7 +1585,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3653</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.6" data-creator="Anthropic" data-country="US" data-ii="44.93" data-diff="-7.09" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="high">
   <td class="ii">44.93</td>
   <td class="diff-cell"><span class="diff neg">-7.09</span></td>
   <td class="name">
@@ -1589,7 +1598,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark" data-creator="Meta" data-country="US" data-ii="44.25" data-diff="-7.77" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">44.25</td>
   <td class="diff-cell"><span class="diff neg">-7.77</span></td>
   <td class="name">
@@ -1602,7 +1611,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.2" data-creator="OpenAI" data-country="US" data-ii="43.34" data-diff="-8.68" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub=", medium">
   <td class="ii">43.34</td>
   <td class="diff-cell"><span class="diff neg">-8.68</span></td>
   <td class="name">
@@ -1615,7 +1624,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.7 Code" data-creator="Kimi" data-country="CN" data-ii="43.02" data-diff="-9.00" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.2220" data-sub="—">
   <td class="ii">43.02</td>
   <td class="diff-cell"><span class="diff neg">-9.00</span></td>
   <td class="name">
@@ -1628,7 +1637,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2220</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2.5-Pro" data-creator="Xiaomi" data-country="CN" data-ii="42.88" data-diff="-9.14" data-params="1023B" data-type="open" data-reasoning="1" data-cost="$0.0339" data-sub="—">
   <td class="ii">42.88</td>
   <td class="diff-cell"><span class="diff neg">-9.14</span></td>
   <td class="name">
@@ -1641,7 +1650,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0339</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Inkling" data-creator="Thinking Machines" data-country="US" data-ii="42.29" data-diff="-9.73" data-params="975B" data-type="open" data-reasoning="1" data-cost="$0.3389" data-sub="—">
   <td class="ii">42.29</td>
   <td class="diff-cell"><span class="diff neg">-9.73</span></td>
   <td class="name">
@@ -1654,7 +1663,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3389</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Hy3" data-creator="Tencent" data-country="CN" data-ii="42.21" data-diff="-9.81" data-params="299B" data-type="open" data-reasoning="1" data-cost="$0.0357" data-sub="—">
   <td class="ii">42.21</td>
   <td class="diff-cell"><span class="diff neg">-9.81</span></td>
   <td class="name">
@@ -1667,7 +1676,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0357</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Flash" data-creator="DeepSeek" data-country="CN" data-ii="42.12" data-diff="-9.90" data-params="284B" data-type="open" data-reasoning="1" data-cost="$0.0673" data-sub=", high">
   <td class="ii">42.12</td>
   <td class="diff-cell"><span class="diff neg">-9.90</span></td>
   <td class="name">
@@ -1680,7 +1689,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0673</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.5" data-creator="Anthropic" data-country="US" data-ii="41.87" data-diff="-10.15" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.87</td>
   <td class="diff-cell"><span class="diff neg">-10.15</span></td>
   <td class="name">
@@ -1693,7 +1702,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Nex-N2-Pro" data-creator="Nex AGI" data-country="CN" data-ii="41.74" data-diff="-10.28" data-params="397B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.74</td>
   <td class="diff-cell"><span class="diff neg">-10.28</span></td>
   <td class="name">
@@ -1706,7 +1715,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Solar Pro 4" data-creator="Upstage" data-country="KR" data-ii="41.64" data-diff="-10.38" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.2231" data-sub="—">
   <td class="ii">41.64</td>
   <td class="diff-cell"><span class="diff neg">-10.38</span></td>
   <td class="name">
@@ -1719,7 +1728,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2231</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Pro" data-creator="Xiaomi" data-country="CN" data-ii="41.37" data-diff="-10.65" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.37</td>
   <td class="diff-cell"><span class="diff neg">-10.65</span></td>
   <td class="name">
@@ -1732,7 +1741,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.2 Codex" data-creator="OpenAI" data-country="US" data-ii="41.22" data-diff="-10.80" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.22</td>
   <td class="diff-cell"><span class="diff neg">-10.80</span></td>
   <td class="name">
@@ -1745,7 +1754,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Inkling Small" data-creator="Thinking Machines" data-country="US" data-ii="41.18" data-diff="-10.84" data-params="266B" data-type="open" data-reasoning="1" data-cost="$0.0735" data-sub="—">
   <td class="ii">41.18</td>
   <td class="diff-cell"><span class="diff neg">-10.84</span></td>
   <td class="name">
@@ -1758,7 +1767,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0735</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 Max Preview" data-creator="Alibaba" data-country="CN" data-ii="41.07" data-diff="-10.95" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.07</td>
   <td class="diff-cell"><span class="diff neg">-10.95</span></td>
   <td class="name">
@@ -1771,7 +1780,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.1" data-creator="Z AI" data-country="CN" data-ii="40.97" data-diff="-11.05" data-params="744B" data-type="open" data-reasoning="1" data-cost="$0.3042" data-sub="—">
   <td class="ii">40.97</td>
   <td class="diff-cell"><span class="diff neg">-11.05</span></td>
   <td class="name">
@@ -1784,7 +1793,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3042</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4 mini" data-creator="OpenAI" data-country="US" data-ii="40.94" data-diff="-11.08" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4948" data-sub=", medium">
   <td class="ii">40.94</td>
   <td class="diff-cell"><span class="diff neg">-11.08</span></td>
   <td class="name">
@@ -1797,7 +1806,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.4948</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok Build 0.1 0616" data-creator="SpaceXAI" data-country="US" data-ii="40.65" data-diff="-11.37" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2252" data-sub="—">
   <td class="ii">40.65</td>
   <td class="diff-cell"><span class="diff neg">-11.37</span></td>
   <td class="name">
@@ -1810,7 +1819,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2252</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3 Pro Preview" data-creator="Google" data-country="US" data-ii="40.61" data-diff="-11.41" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="low">
   <td class="ii">40.61</td>
   <td class="diff-cell"><span class="diff neg">-11.41</span></td>
   <td class="name">
@@ -1823,7 +1832,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5" data-creator="Z AI" data-country="CN" data-ii="40.55" data-diff="-11.47" data-params="744B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">40.55</td>
   <td class="diff-cell"><span class="diff neg">-11.47</span></td>
   <td class="name">
@@ -1836,7 +1845,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 Plus" data-creator="Alibaba" data-country="CN" data-ii="40.49" data-diff="-11.53" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3569" data-sub="—">
   <td class="ii">40.49</td>
   <td class="diff-cell"><span class="diff neg">-11.53</span></td>
   <td class="name">
@@ -1849,7 +1858,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3569</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="JT-4.1 Flash 236B A21B" data-creator="China Mobile" data-country="CN" data-ii="39.85" data-diff="-12.17" data-params="236B" data-type="closed" data-reasoning="0" data-cost="N/A" data-sub="—">
   <td class="ii">39.85</td>
   <td class="diff-cell"><span class="diff neg">-12.17</span></td>
   <td class="name">
@@ -1862,7 +1871,7 @@
   <td class="types"><span class="badge closed">closed</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4 nano" data-creator="OpenAI" data-country="US" data-ii="39.71" data-diff="-12.31" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.1493" data-sub="—">
   <td class="ii">39.71</td>
   <td class="diff-cell"><span class="diff neg">-12.31</span></td>
   <td class="name">
@@ -1875,7 +1884,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.1493</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Agnes 2.5 Pro Alpha" data-creator="Sapiens AI" data-country="SG" data-ii="39.71" data-diff="-12.31" data-params="medium" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">39.71</td>
   <td class="diff-cell"><span class="diff neg">-12.31</span></td>
   <td class="name">
@@ -1888,7 +1897,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.7 Plus" data-creator="Alibaba" data-country="CN" data-ii="39.37" data-diff="-12.65" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.2424" data-sub="—">
   <td class="ii">39.37</td>
   <td class="diff-cell"><span class="diff neg">-12.65</span></td>
   <td class="name">
@@ -1901,7 +1910,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2424</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5-Turbo" data-creator="Z AI" data-country="CN" data-ii="39.05" data-diff="-12.97" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">39.05</td>
   <td class="diff-cell"><span class="diff neg">-12.97</span></td>
   <td class="name">
@@ -1914,7 +1923,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M2.7" data-creator="MiniMax" data-country="CN" data-ii="38.87" data-diff="-13.15" data-params="230B" data-type="open" data-reasoning="1" data-cost="$0.0777" data-sub="—">
   <td class="ii">38.87</td>
   <td class="diff-cell"><span class="diff neg">-13.15</span></td>
   <td class="name">
@@ -1927,7 +1936,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0777</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3 Flash" data-creator="Google" data-country="US" data-ii="38.74" data-diff="-13.28" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">38.74</td>
   <td class="diff-cell"><span class="diff neg">-13.28</span></td>
   <td class="name">
@@ -1940,7 +1949,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Nemotron 3 Ultra" data-creator="NVIDIA" data-country="US" data-ii="38.32" data-diff="-13.70" data-params="550B" data-type="open" data-reasoning="1" data-cost="$0.3827" data-sub="—">
   <td class="ii">38.32</td>
   <td class="diff-cell"><span class="diff neg">-13.70</span></td>
   <td class="name">
@@ -1953,7 +1962,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3827</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2.5" data-creator="Xiaomi" data-country="CN" data-ii="38.04" data-diff="-13.98" data-params="310B" data-type="open" data-reasoning="1" data-cost="$0.0104" data-sub="—">
   <td class="ii">38.04</td>
   <td class="diff-cell"><span class="diff neg">-13.98</span></td>
   <td class="name">
@@ -1966,7 +1975,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0104</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.3" data-creator="SpaceXAI" data-country="US" data-ii="37.95" data-diff="-14.07" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.1454" data-sub="Non-reasoning, low, medium">
   <td class="ii">37.95</td>
   <td class="diff-cell"><span class="diff neg">-14.07</span></td>
   <td class="name">
@@ -1979,7 +1988,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.1454</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.20 0309 v2" data-creator="SpaceXAI" data-country="US" data-ii="37.95" data-diff="-14.07" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.95</td>
   <td class="diff-cell"><span class="diff neg">-14.07</span></td>
   <td class="name">
@@ -1992,7 +2001,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Ling 3.0 Flash" data-creator="InclusionAI" data-country="CN" data-ii="37.82" data-diff="-14.20" data-params="124B" data-type="open" data-reasoning="1" data-cost="$0.0377" data-sub="—">
   <td class="ii">37.82</td>
   <td class="diff-cell"><span class="diff neg">-14.20</span></td>
   <td class="name">
@@ -2005,7 +2014,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0377</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 27B" data-creator="Alibaba" data-country="CN" data-ii="37.70" data-diff="-14.32" data-params="27.8B" data-type="open" data-reasoning="1" data-cost="$0.2918" data-sub="—">
   <td class="ii">37.70</td>
   <td class="diff-cell"><span class="diff neg">-14.32</span></td>
   <td class="name">
@@ -2018,7 +2027,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2918</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.1" data-creator="OpenAI" data-country="US" data-ii="37.47" data-diff="-14.55" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3040" data-sub="—">
   <td class="ii">37.47</td>
   <td class="diff-cell"><span class="diff neg">-14.55</span></td>
   <td class="name">
@@ -2031,7 +2040,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3040</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.20 0309" data-creator="SpaceXAI" data-country="US" data-ii="37.44" data-diff="-14.58" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.44</td>
   <td class="diff-cell"><span class="diff neg">-14.58</span></td>
   <td class="name">
@@ -2044,7 +2053,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.5 Flash-Lite" data-creator="Google" data-country="US" data-ii="37.44" data-diff="-14.58" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.0965" data-sub="—">
   <td class="ii">37.44</td>
   <td class="diff-cell"><span class="diff neg">-14.58</span></td>
   <td class="name">
@@ -2057,7 +2066,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0965</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Solar Open2 250B" data-creator="Upstage" data-country="KR" data-ii="37.43" data-diff="-14.59" data-params="250B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.43</td>
   <td class="diff-cell"><span class="diff neg">-14.59</span></td>
   <td class="name">
@@ -2070,7 +2079,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude 4.5 Sonnet" data-creator="Anthropic" data-country="US" data-ii="37.39" data-diff="-14.63" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4643" data-sub="—">
   <td class="ii">37.39</td>
   <td class="diff-cell"><span class="diff neg">-14.63</span></td>
   <td class="name">
@@ -2083,7 +2092,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.4643</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Omni-0327" data-creator="Xiaomi" data-country="CN" data-ii="37.32" data-diff="-14.70" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.32</td>
   <td class="diff-cell"><span class="diff neg">-14.70</span></td>
   <td class="name">
@@ -2096,7 +2105,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5 Codex" data-creator="OpenAI" data-country="US" data-ii="37.04" data-diff="-14.98" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.04</td>
   <td class="diff-cell"><span class="diff neg">-14.98</span></td>
   <td class="name">
@@ -2109,7 +2118,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.5" data-creator="Kimi" data-country="CN" data-ii="36.02" data-diff="-16.00" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.0964" data-sub="—">
   <td class="ii">36.02</td>
   <td class="diff-cell"><span class="diff neg">-16.00</span></td>
   <td class="name">
@@ -2122,7 +2131,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0964</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Omni" data-creator="Xiaomi" data-country="CN" data-ii="35.87" data-diff="-16.15" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.87</td>
   <td class="diff-cell"><span class="diff neg">-16.15</span></td>
   <td class="name">
@@ -2135,7 +2144,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.1 Codex" data-creator="OpenAI" data-country="US" data-ii="35.60" data-diff="-16.42" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.60</td>
   <td class="diff-cell"><span class="diff neg">-16.42</span></td>
   <td class="name">
@@ -2148,7 +2157,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM 5V Turbo" data-creator="Z AI" data-country="CN" data-ii="35.35" data-diff="-16.67" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.35</td>
   <td class="diff-cell"><span class="diff neg">-16.67</span></td>
   <td class="name">
@@ -2161,7 +2170,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5" data-creator="OpenAI" data-country="US" data-ii="35.31" data-diff="-16.71" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2572" data-sub="ChatGPT, low, medium, minimal">
   <td class="ii">35.31</td>
   <td class="diff-cell"><span class="diff neg">-16.71</span></td>
   <td class="name">
@@ -2174,7 +2183,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.2572</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Glimmer" data-creator="Meta" data-country="US" data-ii="35.06" data-diff="-16.96" data-params="30B" data-type="open" data-reasoning="1" data-cost="$0.0732" data-sub="—">
   <td class="ii">35.06</td>
   <td class="diff-cell"><span class="diff neg">-16.96</span></td>
   <td class="name">
@@ -2187,7 +2196,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.0732</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="A.X-K2" data-creator="SK Telecom" data-country="KR" data-ii="35.01" data-diff="-17.01" data-params="692B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.01</td>
   <td class="diff-cell"><span class="diff neg">-17.01</span></td>
   <td class="name">
@@ -2200,7 +2209,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr></tbody>
-  <tbody class="only-zh"><tr class="mrow">
+  <tbody class="only-zh"><tr class="mrow" data-name="Claude Sonnet 4.6" data-creator="Anthropic" data-country="美国" data-ii="48.37" data-diff="-3.65" data-params="large" data-type="closed" data-reasoning="1" data-cost="$1.2182" data-sub="Non-reasoning, Non-reasoning, Low Effort">
   <td class="ii">48.37</td>
   <td class="diff-cell"><span class="diff neg">-3.65</span></td>
   <td class="name">
@@ -2213,7 +2222,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$1.2182</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.1 Pro Preview" data-creator="Google" data-country="美国" data-ii="47.74" data-diff="-4.28" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3346" data-sub="—">
   <td class="ii">47.74</td>
   <td class="diff-cell"><span class="diff neg">-4.28</span></td>
   <td class="name">
@@ -2226,7 +2235,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3346</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Motif 3" data-creator="Motif Technologies" data-country="韩国" data-ii="47.36" data-diff="-4.66" data-params="314B" data-type="both" data-reasoning="1" data-cost="N/A" data-sub="Beta">
   <td class="ii">47.36</td>
   <td class="diff-cell"><span class="diff neg">-4.66</span></td>
   <td class="name">
@@ -2239,7 +2248,7 @@
   <td class="types"><span class="badge both">双</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.7 Max" data-creator="Alibaba" data-country="中国" data-ii="46.71" data-diff="-5.31" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.5413" data-sub="—">
   <td class="ii">46.71</td>
   <td class="diff-cell"><span class="diff neg">-5.31</span></td>
   <td class="name">
@@ -2252,7 +2261,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.5413</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.3 Codex" data-creator="OpenAI" data-country="美国" data-ii="45.51" data-diff="-6.51" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">45.51</td>
   <td class="diff-cell"><span class="diff neg">-6.51</span></td>
   <td class="name">
@@ -2265,7 +2274,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M3" data-creator="MiniMax" data-country="中国" data-ii="45.40" data-diff="-6.62" data-params="428B" data-type="open" data-reasoning="1" data-cost="$0.1387" data-sub="—">
   <td class="ii">45.40</td>
   <td class="diff-cell"><span class="diff neg">-6.62</span></td>
   <td class="name">
@@ -2278,7 +2287,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.1387</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Pro" data-creator="DeepSeek" data-country="中国" data-ii="45.27" data-diff="-6.75" data-params="1600B" data-type="open" data-reasoning="1" data-cost="$0.0474" data-sub=", high">
   <td class="ii">45.27</td>
   <td class="diff-cell"><span class="diff neg">-6.75</span></td>
   <td class="name">
@@ -2291,7 +2300,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0474</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.6" data-creator="Kimi" data-country="中国" data-ii="45.14" data-diff="-6.88" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.3653" data-sub="—">
   <td class="ii">45.14</td>
   <td class="diff-cell"><span class="diff neg">-6.88</span></td>
   <td class="name">
@@ -2304,7 +2313,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3653</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.6" data-creator="Anthropic" data-country="美国" data-ii="44.93" data-diff="-7.09" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="high">
   <td class="ii">44.93</td>
   <td class="diff-cell"><span class="diff neg">-7.09</span></td>
   <td class="name">
@@ -2317,7 +2326,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Spark" data-creator="Meta" data-country="美国" data-ii="44.25" data-diff="-7.77" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">44.25</td>
   <td class="diff-cell"><span class="diff neg">-7.77</span></td>
   <td class="name">
@@ -2330,7 +2339,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.2" data-creator="OpenAI" data-country="美国" data-ii="43.34" data-diff="-8.68" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub=", medium">
   <td class="ii">43.34</td>
   <td class="diff-cell"><span class="diff neg">-8.68</span></td>
   <td class="name">
@@ -2343,7 +2352,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.7 Code" data-creator="Kimi" data-country="中国" data-ii="43.02" data-diff="-9.00" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.2220" data-sub="—">
   <td class="ii">43.02</td>
   <td class="diff-cell"><span class="diff neg">-9.00</span></td>
   <td class="name">
@@ -2356,7 +2365,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2220</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2.5-Pro" data-creator="Xiaomi" data-country="中国" data-ii="42.88" data-diff="-9.14" data-params="1023B" data-type="open" data-reasoning="1" data-cost="$0.0339" data-sub="—">
   <td class="ii">42.88</td>
   <td class="diff-cell"><span class="diff neg">-9.14</span></td>
   <td class="name">
@@ -2369,7 +2378,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0339</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Inkling" data-creator="Thinking Machines" data-country="美国" data-ii="42.29" data-diff="-9.73" data-params="975B" data-type="open" data-reasoning="1" data-cost="$0.3389" data-sub="—">
   <td class="ii">42.29</td>
   <td class="diff-cell"><span class="diff neg">-9.73</span></td>
   <td class="name">
@@ -2382,7 +2391,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3389</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Hy3" data-creator="Tencent" data-country="中国" data-ii="42.21" data-diff="-9.81" data-params="299B" data-type="open" data-reasoning="1" data-cost="$0.0357" data-sub="—">
   <td class="ii">42.21</td>
   <td class="diff-cell"><span class="diff neg">-9.81</span></td>
   <td class="name">
@@ -2395,7 +2404,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0357</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="DeepSeek V4 Flash" data-creator="DeepSeek" data-country="中国" data-ii="42.12" data-diff="-9.90" data-params="284B" data-type="open" data-reasoning="1" data-cost="$0.0673" data-sub=", high">
   <td class="ii">42.12</td>
   <td class="diff-cell"><span class="diff neg">-9.90</span></td>
   <td class="name">
@@ -2408,7 +2417,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0673</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude Opus 4.5" data-creator="Anthropic" data-country="美国" data-ii="41.87" data-diff="-10.15" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.87</td>
   <td class="diff-cell"><span class="diff neg">-10.15</span></td>
   <td class="name">
@@ -2421,7 +2430,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Nex-N2-Pro" data-creator="Nex AGI" data-country="中国" data-ii="41.74" data-diff="-10.28" data-params="397B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.74</td>
   <td class="diff-cell"><span class="diff neg">-10.28</span></td>
   <td class="name">
@@ -2434,7 +2443,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Solar Pro 4" data-creator="Upstage" data-country="韩国" data-ii="41.64" data-diff="-10.38" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.2231" data-sub="—">
   <td class="ii">41.64</td>
   <td class="diff-cell"><span class="diff neg">-10.38</span></td>
   <td class="name">
@@ -2447,7 +2456,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2231</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Pro" data-creator="Xiaomi" data-country="中国" data-ii="41.37" data-diff="-10.65" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.37</td>
   <td class="diff-cell"><span class="diff neg">-10.65</span></td>
   <td class="name">
@@ -2460,7 +2469,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.2 Codex" data-creator="OpenAI" data-country="美国" data-ii="41.22" data-diff="-10.80" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.22</td>
   <td class="diff-cell"><span class="diff neg">-10.80</span></td>
   <td class="name">
@@ -2473,7 +2482,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Inkling Small" data-creator="Thinking Machines" data-country="美国" data-ii="41.18" data-diff="-10.84" data-params="266B" data-type="open" data-reasoning="1" data-cost="$0.0735" data-sub="—">
   <td class="ii">41.18</td>
   <td class="diff-cell"><span class="diff neg">-10.84</span></td>
   <td class="name">
@@ -2486,7 +2495,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0735</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 Max Preview" data-creator="Alibaba" data-country="中国" data-ii="41.07" data-diff="-10.95" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">41.07</td>
   <td class="diff-cell"><span class="diff neg">-10.95</span></td>
   <td class="name">
@@ -2499,7 +2508,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5.1" data-creator="Z AI" data-country="中国" data-ii="40.97" data-diff="-11.05" data-params="744B" data-type="open" data-reasoning="1" data-cost="$0.3042" data-sub="—">
   <td class="ii">40.97</td>
   <td class="diff-cell"><span class="diff neg">-11.05</span></td>
   <td class="name">
@@ -2512,7 +2521,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3042</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4 mini" data-creator="OpenAI" data-country="美国" data-ii="40.94" data-diff="-11.08" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4948" data-sub=", medium">
   <td class="ii">40.94</td>
   <td class="diff-cell"><span class="diff neg">-11.08</span></td>
   <td class="name">
@@ -2525,7 +2534,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.4948</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok Build 0.1 0616" data-creator="SpaceXAI" data-country="美国" data-ii="40.65" data-diff="-11.37" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2252" data-sub="—">
   <td class="ii">40.65</td>
   <td class="diff-cell"><span class="diff neg">-11.37</span></td>
   <td class="name">
@@ -2538,7 +2547,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2252</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3 Pro Preview" data-creator="Google" data-country="美国" data-ii="40.61" data-diff="-11.41" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="low">
   <td class="ii">40.61</td>
   <td class="diff-cell"><span class="diff neg">-11.41</span></td>
   <td class="name">
@@ -2551,7 +2560,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5" data-creator="Z AI" data-country="中国" data-ii="40.55" data-diff="-11.47" data-params="744B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">40.55</td>
   <td class="diff-cell"><span class="diff neg">-11.47</span></td>
   <td class="name">
@@ -2564,7 +2573,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 Plus" data-creator="Alibaba" data-country="中国" data-ii="40.49" data-diff="-11.53" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3569" data-sub="—">
   <td class="ii">40.49</td>
   <td class="diff-cell"><span class="diff neg">-11.53</span></td>
   <td class="name">
@@ -2577,7 +2586,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3569</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="JT-4.1 Flash 236B A21B" data-creator="China Mobile" data-country="中国" data-ii="39.85" data-diff="-12.17" data-params="236B" data-type="closed" data-reasoning="0" data-cost="N/A" data-sub="—">
   <td class="ii">39.85</td>
   <td class="diff-cell"><span class="diff neg">-12.17</span></td>
   <td class="name">
@@ -2590,7 +2599,7 @@
   <td class="types"><span class="badge closed">闭源</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.4 nano" data-creator="OpenAI" data-country="美国" data-ii="39.71" data-diff="-12.31" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.1493" data-sub="—">
   <td class="ii">39.71</td>
   <td class="diff-cell"><span class="diff neg">-12.31</span></td>
   <td class="name">
@@ -2603,7 +2612,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.1493</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Agnes 2.5 Pro Alpha" data-creator="Sapiens AI" data-country="新加坡" data-ii="39.71" data-diff="-12.31" data-params="medium" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">39.71</td>
   <td class="diff-cell"><span class="diff neg">-12.31</span></td>
   <td class="name">
@@ -2616,7 +2625,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.7 Plus" data-creator="Alibaba" data-country="中国" data-ii="39.37" data-diff="-12.65" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.2424" data-sub="—">
   <td class="ii">39.37</td>
   <td class="diff-cell"><span class="diff neg">-12.65</span></td>
   <td class="name">
@@ -2629,7 +2638,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2424</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-5-Turbo" data-creator="Z AI" data-country="中国" data-ii="39.05" data-diff="-12.97" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">39.05</td>
   <td class="diff-cell"><span class="diff neg">-12.97</span></td>
   <td class="name">
@@ -2642,7 +2651,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M2.7" data-creator="MiniMax" data-country="中国" data-ii="38.87" data-diff="-13.15" data-params="230B" data-type="open" data-reasoning="1" data-cost="$0.0777" data-sub="—">
   <td class="ii">38.87</td>
   <td class="diff-cell"><span class="diff neg">-13.15</span></td>
   <td class="name">
@@ -2655,7 +2664,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0777</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3 Flash" data-creator="Google" data-country="美国" data-ii="38.74" data-diff="-13.28" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">38.74</td>
   <td class="diff-cell"><span class="diff neg">-13.28</span></td>
   <td class="name">
@@ -2668,7 +2677,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Nemotron 3 Ultra" data-creator="NVIDIA" data-country="美国" data-ii="38.32" data-diff="-13.70" data-params="550B" data-type="open" data-reasoning="1" data-cost="$0.3827" data-sub="—">
   <td class="ii">38.32</td>
   <td class="diff-cell"><span class="diff neg">-13.70</span></td>
   <td class="name">
@@ -2681,7 +2690,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3827</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2.5" data-creator="Xiaomi" data-country="中国" data-ii="38.04" data-diff="-13.98" data-params="310B" data-type="open" data-reasoning="1" data-cost="$0.0104" data-sub="—">
   <td class="ii">38.04</td>
   <td class="diff-cell"><span class="diff neg">-13.98</span></td>
   <td class="name">
@@ -2694,7 +2703,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0104</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.3" data-creator="SpaceXAI" data-country="美国" data-ii="37.95" data-diff="-14.07" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.1454" data-sub="Non-reasoning, low, medium">
   <td class="ii">37.95</td>
   <td class="diff-cell"><span class="diff neg">-14.07</span></td>
   <td class="name">
@@ -2707,7 +2716,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.1454</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.20 0309 v2" data-creator="SpaceXAI" data-country="美国" data-ii="37.95" data-diff="-14.07" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.95</td>
   <td class="diff-cell"><span class="diff neg">-14.07</span></td>
   <td class="name">
@@ -2720,7 +2729,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Ling 3.0 Flash" data-creator="InclusionAI" data-country="中国" data-ii="37.82" data-diff="-14.20" data-params="124B" data-type="open" data-reasoning="1" data-cost="$0.0377" data-sub="—">
   <td class="ii">37.82</td>
   <td class="diff-cell"><span class="diff neg">-14.20</span></td>
   <td class="name">
@@ -2733,7 +2742,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0377</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Qwen3.6 27B" data-creator="Alibaba" data-country="中国" data-ii="37.70" data-diff="-14.32" data-params="27.8B" data-type="open" data-reasoning="1" data-cost="$0.2918" data-sub="—">
   <td class="ii">37.70</td>
   <td class="diff-cell"><span class="diff neg">-14.32</span></td>
   <td class="name">
@@ -2746,7 +2755,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2918</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.1" data-creator="OpenAI" data-country="美国" data-ii="37.47" data-diff="-14.55" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.3040" data-sub="—">
   <td class="ii">37.47</td>
   <td class="diff-cell"><span class="diff neg">-14.55</span></td>
   <td class="name">
@@ -2759,7 +2768,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.3040</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Grok 4.20 0309" data-creator="SpaceXAI" data-country="美国" data-ii="37.44" data-diff="-14.58" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.44</td>
   <td class="diff-cell"><span class="diff neg">-14.58</span></td>
   <td class="name">
@@ -2772,7 +2781,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Gemini 3.5 Flash-Lite" data-creator="Google" data-country="美国" data-ii="37.44" data-diff="-14.58" data-params="medium" data-type="closed" data-reasoning="1" data-cost="$0.0965" data-sub="—">
   <td class="ii">37.44</td>
   <td class="diff-cell"><span class="diff neg">-14.58</span></td>
   <td class="name">
@@ -2785,7 +2794,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0965</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Solar Open2 250B" data-creator="Upstage" data-country="韩国" data-ii="37.43" data-diff="-14.59" data-params="250B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.43</td>
   <td class="diff-cell"><span class="diff neg">-14.59</span></td>
   <td class="name">
@@ -2798,7 +2807,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude 4.5 Sonnet" data-creator="Anthropic" data-country="美国" data-ii="37.39" data-diff="-14.63" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.4643" data-sub="—">
   <td class="ii">37.39</td>
   <td class="diff-cell"><span class="diff neg">-14.63</span></td>
   <td class="name">
@@ -2811,7 +2820,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.4643</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Omni-0327" data-creator="Xiaomi" data-country="中国" data-ii="37.32" data-diff="-14.70" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.32</td>
   <td class="diff-cell"><span class="diff neg">-14.70</span></td>
   <td class="name">
@@ -2824,7 +2833,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5 Codex" data-creator="OpenAI" data-country="美国" data-ii="37.04" data-diff="-14.98" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">37.04</td>
   <td class="diff-cell"><span class="diff neg">-14.98</span></td>
   <td class="name">
@@ -2837,7 +2846,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Kimi K2.5" data-creator="Kimi" data-country="中国" data-ii="36.02" data-diff="-16.00" data-params="1000B" data-type="open" data-reasoning="1" data-cost="$0.0964" data-sub="—">
   <td class="ii">36.02</td>
   <td class="diff-cell"><span class="diff neg">-16.00</span></td>
   <td class="name">
@@ -2850,7 +2859,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0964</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiMo-V2-Omni" data-creator="Xiaomi" data-country="中国" data-ii="35.87" data-diff="-16.15" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.87</td>
   <td class="diff-cell"><span class="diff neg">-16.15</span></td>
   <td class="name">
@@ -2863,7 +2872,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5.1 Codex" data-creator="OpenAI" data-country="美国" data-ii="35.60" data-diff="-16.42" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.60</td>
   <td class="diff-cell"><span class="diff neg">-16.42</span></td>
   <td class="name">
@@ -2876,7 +2885,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM 5V Turbo" data-creator="Z AI" data-country="中国" data-ii="35.35" data-diff="-16.67" data-params="—" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.35</td>
   <td class="diff-cell"><span class="diff neg">-16.67</span></td>
   <td class="name">
@@ -2889,7 +2898,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GPT-5" data-creator="OpenAI" data-country="美国" data-ii="35.31" data-diff="-16.71" data-params="large" data-type="closed" data-reasoning="1" data-cost="$0.2572" data-sub="ChatGPT, low, medium, minimal">
   <td class="ii">35.31</td>
   <td class="diff-cell"><span class="diff neg">-16.71</span></td>
   <td class="name">
@@ -2902,7 +2911,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.2572</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Muse Glimmer" data-creator="Meta" data-country="美国" data-ii="35.06" data-diff="-16.96" data-params="30B" data-type="open" data-reasoning="1" data-cost="$0.0732" data-sub="—">
   <td class="ii">35.06</td>
   <td class="diff-cell"><span class="diff neg">-16.96</span></td>
   <td class="name">
@@ -2915,7 +2924,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost">$0.0732</td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="A.X-K2" data-creator="SK Telecom" data-country="韩国" data-ii="35.01" data-diff="-17.01" data-params="692B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">35.01</td>
   <td class="diff-cell"><span class="diff neg">-17.01</span></td>
   <td class="name">
@@ -2944,7 +2953,7 @@
       <th><en>Cost</en><zh>成本</zh></th>
     </tr>
   </thead>
-  <tbody class="only-en"><tr class="mrow">
+  <tbody class="only-en"><tr class="mrow" data-name="Qwen3.5 27B" data-creator="Alibaba" data-country="CN" data-ii="34.60" data-diff="-17.42" data-params="27.8B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.60</td>
   <td class="diff-cell"><span class="diff neg">-17.42</span></td>
   <td class="name">
@@ -2957,7 +2966,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude 4.1 Opus" data-creator="Anthropic" data-country="US" data-ii="34.54" data-diff="-17.48" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.54</td>
   <td class="diff-cell"><span class="diff neg">-17.48</span></td>
   <td class="name">
@@ -2970,7 +2979,7 @@
   <td class="types"><span class="badge closed">closed</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M2.5" data-creator="MiniMax" data-country="CN" data-ii="34.47" data-diff="-17.55" data-params="230B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.47</td>
   <td class="diff-cell"><span class="diff neg">-17.55</span></td>
   <td class="name">
@@ -2983,7 +2992,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-4.7" data-creator="Z AI" data-country="CN" data-ii="34.46" data-diff="-17.56" data-params="357B" data-type="open" data-reasoning="1" data-cost="$0.3586" data-sub="—">
   <td class="ii">34.46</td>
   <td class="diff-cell"><span class="diff neg">-17.56</span></td>
   <td class="name">
@@ -2996,7 +3005,7 @@
   <td class="types"><span class="badge open">open</span><span class="badge reasoning">R</span></td>
   <td class="num cost">$0.3586</td>
 </tr></tbody>
-  <tbody class="only-zh"><tr class="mrow">
+  <tbody class="only-zh"><tr class="mrow" data-name="Qwen3.5 27B" data-creator="Alibaba" data-country="中国" data-ii="34.60" data-diff="-17.42" data-params="27.8B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.60</td>
   <td class="diff-cell"><span class="diff neg">-17.42</span></td>
   <td class="name">
@@ -3009,7 +3018,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="Claude 4.1 Opus" data-creator="Anthropic" data-country="美国" data-ii="34.54" data-diff="-17.48" data-params="large" data-type="closed" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.54</td>
   <td class="diff-cell"><span class="diff neg">-17.48</span></td>
   <td class="name">
@@ -3022,7 +3031,7 @@
   <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="MiniMax-M2.5" data-creator="MiniMax" data-country="中国" data-ii="34.47" data-diff="-17.55" data-params="230B" data-type="open" data-reasoning="1" data-cost="N/A" data-sub="—">
   <td class="ii">34.47</td>
   <td class="diff-cell"><span class="diff neg">-17.55</span></td>
   <td class="name">
@@ -3035,7 +3044,7 @@
   <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
   <td class="num cost"><span class="na">N/A</span></td>
 </tr>
-<tr class="mrow">
+<tr class="mrow" data-name="GLM-4.7" data-creator="Z AI" data-country="中国" data-ii="34.46" data-diff="-17.56" data-params="357B" data-type="open" data-reasoning="1" data-cost="$0.3586" data-sub="—">
   <td class="ii">34.46</td>
   <td class="diff-cell"><span class="diff neg">-17.56</span></td>
   <td class="name">
@@ -3130,8 +3139,9 @@
 
 <div id="hover-card" class="hover-card">
   <div class="hc-name"></div>
-  <div class="hc-badges"><span class="hc-badge"></span></div>
+  <div class="hc-badges"></div>
   <div class="hc-line"></div>
+  <div class="hc-line hc-sub"></div>
 </div>
 
 <script>
@@ -3161,6 +3171,7 @@
   const tipName = tip.querySelector('.hc-name');
   const tipBadges = tip.querySelector('.hc-badges');
   const tipLine = tip.querySelector('.hc-line');
+  const tipSub = tip.querySelector('.hc-sub');
   const KIND_TEXT = {
     en: { Stronger: 'Stronger', Similar: 'Similar ± 2 II', Anchor: 'Anchor' },
     zh: { Stronger: '强于 Qwen', Similar: '相当 ±2 II', Anchor: '基准模型' },
@@ -3169,36 +3180,72 @@
     en: { open: 'Open weights', closed: 'Closed', both: 'Open + Closed' },
     zh: { open: '开源权重', closed: '闭源', both: '开源 + 闭源' },
   };
-  const II_TEXT = { en: 'II', zh: 'II' };
+  const REASONING_TEXT = { en: 'Reasoning', zh: '推理' };
+  const SUB_TEXT = { en: 'Variants: ', zh: '变体：' };
+  function curLang() { return document.body.dataset.lang === 'zh' ? 'zh' : 'en'; }
+  function addBadge(cls, text) {
+    const b = document.createElement('span');
+    b.className = 'hc-badge ' + cls;
+    b.textContent = text;
+    tipBadges.appendChild(b);
+    return b;
+  }
+  function clampTip(tw, th, x, y) {
+    if (x + tw > window.innerWidth - 8) x = window.innerWidth - tw - 8;
+    if (x < 8) x = 8;
+    if (y + th > window.innerHeight - 8) y = window.innerHeight - th - 8;
+    if (y < 8) y = 8;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  // Hover card for II scale markers (fixed above the dot)
   function showTip(m) {
-    const lang = document.body.dataset.lang === 'zh' ? 'zh' : 'en';
-    const kind = m.dataset.kind;
-    const type = m.dataset.type;
+    const lang = curLang();
     tipName.textContent = m.dataset.name;
     tipBadges.innerHTML = '';
-    const kindBadge = document.createElement('span');
-    kindBadge.className = 'hc-badge kind-' + kind.toLowerCase();
-    kindBadge.textContent = (KIND_TEXT[lang][kind] || kind);
-    const typeBadge = document.createElement('span');
-    typeBadge.className = 'hc-badge t-' + type;
-    typeBadge.textContent = TYPE_TEXT[lang][type] || type;
-    tipBadges.appendChild(kindBadge);
-    tipBadges.appendChild(typeBadge);
-    tipLine.textContent = II_TEXT[lang] + ' ' + m.dataset.ii + '  ·  ' + m.dataset.creator;
+    tipSub.textContent = '';
+    addBadge('kind-' + m.dataset.kind.toLowerCase(), KIND_TEXT[lang][m.dataset.kind] || m.dataset.kind);
+    addBadge('t-' + m.dataset.type, TYPE_TEXT[lang][m.dataset.type] || m.dataset.type);
+    tipLine.textContent = 'II ' + m.dataset.ii + '  ·  ' + m.dataset.creator;
     tip.classList.add('show');
     const r = m.getBoundingClientRect();
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     let x = r.left + r.width / 2 - tw / 2;
-    x = Math.max(8, Math.min(window.innerWidth - tw - 8, x));
     let y = r.top - th - 8;
     if (y < 8) y = r.bottom + 8;
-    tip.style.left = x + 'px';
-    tip.style.top = y + 'px';
+    clampTip(tw, th, x, y);
+  }
+  // Hover card for model table rows (follows the cursor)
+  function fillRowTip(tr) {
+    const lang = curLang();
+    tipName.textContent = tr.dataset.name;
+    tipBadges.innerHTML = '';
+    addBadge('t-' + tr.dataset.type, TYPE_TEXT[lang][tr.dataset.type] || tr.dataset.type);
+    if (tr.dataset.reasoning === '1') addBadge('t-reasoning', REASONING_TEXT[lang]);
+    addBadge('t-country', tr.dataset.country);
+    tipLine.textContent = 'II ' + tr.dataset.ii + '  ·  Δ ' + tr.dataset.diff + '  ·  ' + tr.dataset.cost + ' / task';
+    const parts = [];
+    if (tr.dataset.sub && tr.dataset.sub !== '—') parts.push(SUB_TEXT[lang] + tr.dataset.sub);
+    if (tr.dataset.params && tr.dataset.params !== '—') parts.push(tr.dataset.params + ' params');
+    tipSub.textContent = parts.join('  ·  ');
+  }
+  function moveTipCursor(e) {
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = e.clientX + 16, y = e.clientY + 14;
+    if (x + tw > window.innerWidth - 8) x = e.clientX - tw - 16;
+    if (y + th > window.innerHeight - 8) y = e.clientY - th - 14;
+    tip.style.left = Math.max(8, x) + 'px';
+    tip.style.top = Math.max(8, y) + 'px';
   }
   function hideTip() { tip.classList.remove('show'); }
   document.querySelectorAll('.region-marker[data-name]').forEach(m => {
     m.addEventListener('mouseenter', () => showTip(m));
     m.addEventListener('mouseleave', hideTip);
+  });
+  document.querySelectorAll('tr[data-name]').forEach(tr => {
+    tr.addEventListener('mouseenter', () => { fillRowTip(tr); tip.classList.add('show'); });
+    tr.addEventListener('mousemove', moveTipCursor);
+    tr.addEventListener('mouseleave', hideTip);
   });
   // initial: URL > localStorage > en
   let initial = 'en';
