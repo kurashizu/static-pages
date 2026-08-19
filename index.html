@@ -156,6 +156,49 @@
   }
   .stats b { color: var(--purple-dark); }
 
+  /* routing rules */
+  .routing {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .routing h3 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-weight: 800;
+    color: var(--purple-dark);
+  }
+  .routing table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .routing td, .routing th {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    text-align: left;
+    vertical-align: top;
+  }
+  .routing th {
+    font-weight: 700;
+    color: var(--ink-dim);
+    width: 220px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .routing code {
+    background: #f5f3ee;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--purple-dark);
+  }
+
   footer {
     margin: 50px 0 0;
     padding: 16px 0;
@@ -172,33 +215,46 @@
 <div class="container">
 
 <h1>📄 Static Pages</h1>
-<p class="sub">A personal collection of self-contained HTML reports &amp; interactive charts. Each card below is an independent page — click to open. Hosted via GitHub Pages on <a href="http://ghp.krsz.in/">ghp.krsz.in</a>.</p>
+<p class="sub">A personal collection of self-contained HTML reports. Each card below is an independent page — click to open. Hosted via GitHub Pages on <a href="http://ghp.krsz.in/">ghp.krsz.in</a>.</p>
 
 <div class="stats">
-  <span><b>2</b> pages</span>
+  <span><b>1</b> page</span>
   <span>·</span>
-  <span><b>EN</b> &amp; <b>ZH</b> reports</span>
+  <span><b>EN</b> &amp; <b>ZH</b> in one file</span>
   <span>·</span>
   <span>Built <b>2026-08</b></span>
 </div>
 
 <div class="grid">
 
-  <a class="card" href="./qwen3-8-27b-report/">
+  <a class="card" href="./qwen3-8-27b/">
     <p class="meta">2026-08 · AI Index</p>
     <h3>
       <span class="tag report">REPORT</span>
       Qwen3.8 27B Competitive Intelligence
     </h3>
-    <p>An audit of all <b>610 models</b> on Artificial Analysis Intelligence Index v4.1.1, centred on Qwen3.8 27B as the benchmark anchor. Compares 16 stronger, 8 peer-tied, and 396 weaker models after de-duplication.</p>
+    <p>An audit of all <b>610 models</b> on Artificial Analysis Intelligence Index v4.1.1, centred on Qwen3.8 27B as the benchmark anchor. Compares 16 stronger, 8 peer-tied, and 396 weaker models after de-duplication. <b>EN + 中文</b> in one file with a language toggle.</p>
     <div class="links">
       <span class="link primary">Open report</span>
-      <span class="link">🇬🇧 English</span>
+      <span class="link">🇬🇧 EN</span>
       <span class="link">🇨🇳 中文</span>
-      <span class="link">📊 Interactive chart</span>
     </div>
   </a>
 
+</div>
+
+<div class="routing">
+  <h3>Routing rules</h3>
+  <table>
+    <tr><th>URL</th><td><code>http://ghp.krsz.in/<i>&lt;slug&gt;</i>/</code></td></tr>
+    <tr><th>Folder name</th><td>kebab-case slug, no spaces, no uppercase. E.g. <code>qwen3-8-27b</code></td></tr>
+    <tr><th>Entry file</th><td><code>index.html</code> at the folder root</td></tr>
+    <tr><th>Localization</th><td>Single bilingual HTML using <code>&lt;en&gt;…&lt;/en&gt;</code> / <code>&lt;zh&gt;…&lt;/zh&gt;</code> tags + JS toggle. Choice saved in <code>localStorage</code>, switchable via <code>?lang=zh</code> URL param.</td></tr>
+    <tr><th>Capabilities</th><td>Self-contained — no build step, no external dependencies, no JS bundlers. CDN libraries (e.g. D3.js) are pulled at runtime.</td></tr>
+    <tr><th>Adding a new page</th><td><code>mkdir my-new-page</code> → drop <code>index.html</code> → add a card to this landing page → <code>git push</code></td></tr>
+    <tr><th>Custom domain</th><td><code>ghp.krsz.in</code> (CNAME)</td></tr>
+    <tr><th>Source branch</th><td><code>main</code>, root path</td></tr>
+  </table>
 </div>
 
 <footer>
