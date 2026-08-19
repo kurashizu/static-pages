@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Qwen3.8 27B 全模型竞争情报报告</title>
+<style>
+  :root {
+    --bg-top: #fbfbfa;
+    --bg-bot: #f3f3f0;
+    --paper: #ffffff;
+    --rule: #d8d6cf;
+    --rule-soft: #ebe9e2;
+    --ink: #1a1a1a;
+    --ink-dim: #4a4a4a;
+    --ink-faint: #8a8a85;
+    --purple: #5b2c91;
+    --purple-dark: #3d1d63;
+    --purple-light: #ece4f5;
+    --gold: #b48a2f;
+    --gold-light: #fbf5e3;
+    --red: #b3261e;
+    --green: #2d6a4f;
+    --green-light: #e8f1ec;
+    --blue: #1958b3;
+    --blue-light: #e6eef8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--bg-top), var(--bg-bot));
+    line-height: 1.65;
+    font-size: 14px;
+  }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 36px 60px;
+  }
+  h1.report-title {
+    font-family: Georgia, "Songti SC", serif;
+    color: var(--purple-dark);
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    border-bottom: 3px solid var(--purple);
+    padding-bottom: 8px;
+  }
+  h2 {
+    font-family: Georgia, "Songti SC", serif;
+    color: var(--purple-dark);
+    font-size: 22px;
+    margin: 36px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  h2 .pill {
+    font-family: "PingFang SC", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 1.2px;
+    color: white;
+    background: var(--purple);
+  }
+  h2 .pill.red { background: #b3261e; }
+  h2 .pill.gold { background: var(--gold); }
+  h2 .pill.blue { background: var(--blue); }
+  h2 small { font-family: "PingFang SC", sans-serif; font-size: 13px; color: var(--ink-faint); font-weight: 400; letter-spacing: 0; }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 24px 0 8px;
+    letter-spacing: 0.3px;
+  }
+  p.sub { color: var(--ink-dim); margin: 0 0 12px; font-size: 13px; }
+  .meta-tags {
+    margin: 8px 0 14px;
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+  .meta-tags a { color: var(--purple-dark); text-decoration: none; }
+  .meta-tags a:hover { text-decoration: underline; }
+
+  .profile {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.04);
+  }
+  .profile h3 {
+    margin: 0 0 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-weight: 800;
+    color: var(--purple-dark);
+    border-bottom: 2px solid var(--purple-light);
+    padding-bottom: 6px;
+  }
+  .profile .big-ii {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    line-height: 1;
+    margin: 10px 0 4px;
+  }
+  .profile .big-ii .tag {
+    font-family: "PingFang SC", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    vertical-align: 22px;
+    margin-left: 6px;
+  }
+  .profile .ll {
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin: 0 0 10px;
+  }
+  .profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .profile-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--rule-soft);
+    width: 110px;
+  }
+  .profile-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+  }
+  .profile-table tr:last-child td,
+  .profile-table tr:last-child th { border-bottom: none; }
+
+  .distribution {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0 24px;
+  }
+  .dist-card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dist-card.red { border-top: 4px solid #b3261e; }
+  .dist-card.gold { border-top: 4px solid var(--gold); }
+  .dist-card.blue { border-top: 4px solid var(--blue); }
+  .dist-card h4 {
+    margin: 0 0 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-weight: 800;
+    color: var(--ink-dim);
+  }
+  .dist-card .num {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 6px 0;
+  }
+  .dist-card.red .num { color: #b3261e; }
+  .dist-card.gold .num { color: var(--gold); }
+  .dist-card.blue .num { color: var(--blue); }
+  .dist-card .detail {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+  .dist-card .breakdown {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .dist-card .breakdown b { color: var(--ink); font-weight: 600; }
+
+  table.models {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px 0 14px;
+    font-size: 13px;
+  }
+  table.models thead {
+    background: linear-gradient(180deg, #f8f6ef, #f3f0e7);
+  }
+  table.models th {
+    text-align: left;
+    padding: 9px 10px;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--rule);
+  }
+  table.models td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: middle;
+  }
+  table.models tr:last-child td { border-bottom: none; }
+  table.models tr:hover td { background: #fafaf6; }
+  table.models .ii {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-family: Georgia, "Songti SC", serif;
+    color: var(--ink);
+    width: 48px;
+  }
+  table.models .diff-cell {
+    width: 56px;
+    text-align: right;
+  }
+  table.models .diff {
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+  table.models .diff.pos { color: #b3261e; background: #faeae8; }
+  table.models .diff.neg { color: var(--blue); background: #e7eef8; }
+  table.models .diff.zero { color: var(--ink-faint); }
+  table.models .name { font-weight: 600; }
+  table.models .name .sub {
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 400;
+    margin-top: 2px;
+    font-style: italic;
+  }
+  table.models .creator { white-space: nowrap; }
+  table.models .creator-dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  table.models .country {
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+  }
+  table.models .num { font-variant-numeric: tabular-nums; }
+  table.models .cost { text-align: right; }
+  .na { color: var(--ink-faint); font-style: italic; }
+
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    vertical-align: middle;
+  }
+  .badge.open { background: var(--green); }
+  .badge.closed { background: #555; }
+  .badge.both { background: #946a2f; }
+  .badge.reasoning { background: var(--purple); }
+
+  .histogram {
+    display: flex;
+    height: 38px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 14px 0 22px;
+    background: var(--paper);
+  }
+  .histogram .seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    border-right: 1px solid rgba(255,255,255,0.4);
+    position: relative;
+    transition: all 0.2s;
+  }
+  .histogram .seg:last-child { border-right: none; }
+  .histogram .seg:hover { filter: brightness(1.15); }
+  .histogram .seg.red { background: #b3261e; }
+  .histogram .seg.gold { background: var(--gold); }
+  .histogram .seg.blue { background: var(--blue); }
+  .histogram .seg.red2 { background: #cf4e44; }
+  .histogram .seg.blue2 { background: #4a83d6; }
+  .histogram .seg.darkblue { background: #2c4a7a; }
+
+  .legend-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+  .legend-bar .item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-bar .sw {
+    width: 14px; height: 12px;
+    border-radius: 2px;
+  }
+
+  .insight {
+    background: var(--purple-light);
+    border-left: 4px solid var(--purple);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .insight.gold { background: var(--gold-light); border-color: var(--gold); }
+  .insight.blue { background: var(--blue-light); border-color: var(--blue); }
+  .insight.green { background: var(--green-light); border-color: var(--green); }
+  .insight strong { color: var(--purple-dark); }
+  .insight.gold strong { color: #8a6618; }
+  .insight.blue strong { color: var(--blue); }
+  .insight.green strong { color: var(--green); }
+
+  .highlight-qwen td { background: var(--purple-light) !important; }
+  .highlight-qwen td.name { font-weight: 700; color: var(--purple-dark); }
+
+  .region {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 14px 0 24px;
+  }
+  .region h4 {
+    margin: 0 0 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    font-weight: 800;
+    color: var(--ink-dim);
+  }
+  .region .scale {
+    position: relative;
+    height: 38px;
+    background: linear-gradient(90deg, #fafaf6, #e8e3d3, #f7e9c2, #f5d4a1, #e8c08d);
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+  }
+  .region .tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
+  }
+  .region .tick-lbl {
+    position: absolute;
+    top: -2px;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--ink-dim);
+    padding: 0 4px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .region .tick-lbl.target { background: var(--purple); color: white; border-color: var(--purple); font-weight: 700; }
+  .region .region-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--ink);
+    cursor: help;
+  }
+  .region .region-marker.qwen { background: var(--purple); width: 18px; height: 18px; box-shadow: 0 0 0 2px var(--purple-dark); z-index: 5; }
+  .region .region-marker.open { background: var(--green); }
+  .region .region-marker.closed { background: #555; }
+  .region .region-marker:hover { transform: translate(-50%, -50%) scale(1.4); }
+  .region .band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(91, 44, 145, 0.08);
+    border-left: 1px dashed var(--purple);
+    border-right: 1px dashed var(--purple);
+  }
+  .region .band-label {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--purple-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .region .axis-num {
+    position: absolute;
+    bottom: -22px;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  footer {
+    margin: 36px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+  footer a { color: var(--purple-dark); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 1100px) {
+    .profile { grid-template-columns: 1fr; }
+    .distribution { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1 class="report-title">Qwen3.8 27B 全模型竞争情报报告</h1>
+<p class="sub">围绕 <b>Qwen3.8 27B</b>（II = 52.02）作为基准锚点，对 Artificial Analysis Intelligence Index v4.1.1 上全部 610 个模型进行系统审计。</p>
+<p class="meta-tags">
+  数据来源: <a href="https://artificialanalysis.ai" target="_blank">artificialanalysis.ai</a> &middot;
+  生成时间: 2026-08 &middot;
+  评测方法: 9 项基准综合（GDPval-AA v2、&tau;&sup3;-Banking、Terminal-Bench v2.1、SciCode、Humanity's Last Exam、GPQA Diamond、CritPt、AA-Omniscience、AA-LCR）
+  &middot; 价格仅显示公开报价；"暂无"表示未公开
+</p>
+
+<div class="profile">
+  <div>
+    <h3>基准模型</h3>
+    <div class="big-ii">52.02<span class="tag">Intelligence Index</span></div>
+    <p class="ll"><b>Qwen3.8 27B</b> &middot; 阿里巴巴 (中国) &middot; 27B 参数 &middot; 发布 2026-08-14</p>
+    <p class="ll" style="margin-top:14px">
+      公开计费（按 1M tokens）：输入 $0.45、输出 $3.20、缓存命中 $0.05。
+      未公开每任务成本。
+    </p>
+    <p class="ll">
+      <b>每任务输出 tokens：</b>47,166（其中推理 37,214 + 答案 9,952）
+    </p>
+    <p class="ll">
+      <b>推理型模型</b> &middot; 开源权重 &middot; <span class="badge open">开源</span>
+    </p>
+  </div>
+  <div>
+    <h3>总分定位</h3>
+    <table class="profile-table">
+      <tr><th>模型总数</th><td>610</td></tr>
+      <tr><th>含 II 分数</th><td>597</td></tr>
+      <tr><th>独立模型族</th><td>421</td></tr>
+      <tr><th>排名</th><td><b>全球前 25</b></td></tr>
+      <tr><th>分位数</th><td>约 96 百分位</td></tr>
+      <tr><th>强过它的开源</th><td>仅 <b>5</b> 个开源模型</td></tr>
+      <tr><th>强过它的闭源</th><td>共 <b>14</b> 个闭源模型</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3>结论</h3>
+    <div class="insight" style="margin-top:6px">
+      <strong>27B 级别的开源前沿。</strong>Qwen3.8 27B 是当前 27B 稠密模型（开源/闭源）最高分。它与所有 Anthropic Sonnet、所有 GPT-5.x pre-Luna、GPT-5.2 / 5.3 / 5.4 持平或领先，并把 OpenAI 的"小型推理"档 <b>GPT-5.6 Luna</b> 压到仅 0.30 II 之外。
+    </div>
+    <div class="insight gold" style="margin-top:8px">
+      <strong>头条：</strong>仅 Claude Opus 5（63.05）、Claude Fable 5（62.07）、GPT-5.6 Sol（60.93）、Grok 4.6（60.92）这 4 个模型在 II 上领先 Qwen3.8 27B 超过 8 分。
+    </div>
+  </div>
+</div>
+
+<h2 style="margin-top:32px">420 个独立模型族的分布</h2>
+<p class="sub">按基础名分组（去除推理档位后缀如 <code>(max)</code>、<code>(xhigh)</code>、<code>(high)</code>、<code>(medium)</code>、<code>(low)</code>、<code>(Non-reasoning)</code> 与日期后缀），取每族最强变体的 II。Qwen3.8 27B 本身不计入总数。</p>
+
+<div class="distribution">
+  <div class="dist-card red">
+    <h4>强于 Qwen</h4>
+    <div class="num">16</div>
+    <div class="detail">II &gt; 54.02</div>
+    <div class="breakdown">
+      <b>2</b> 开源 &middot;
+      <b>14</b> 闭源
+    </div>
+  </div>
+  <div class="dist-card gold">
+    <h4>实力相当</h4>
+    <div class="num">8</div>
+    <div class="detail">II ∈ [50.02, 54.02]</div>
+    <div class="breakdown">
+      <b>3</b> 开源 &middot;
+      <b>5</b> 闭源
+    </div>
+  </div>
+  <div class="dist-card blue">
+    <h4>弱于 Qwen</h4>
+    <div class="num">396</div>
+    <div class="detail">II &lt; 50.02</div>
+    <div class="breakdown">
+      前 60 中：开源 37 &middot; 闭源 23
+    </div>
+  </div>
+</div>
+
+<div class="region">
+  <h4>在 II 标尺（0 – 70）上的竞争位置</h4>
+  <div style="position:relative; padding: 36px 0 30px;">
+    <div class="scale">
+      <div class="band" style="left: 71.5%; width: 5.7%;"></div>
+      <div class="region-marker qwen" style="left: 74.3%;" title="Qwen3.8 27B · II 52.02"></div>
+      <div class="region-marker closed" style="left:90.07142857142857%;" title="Claude Opus 5 · 63.05 · Anthropic"></div>
+      <div class="region-marker closed" style="left:88.67142857142856%;" title="Claude Fable 5 · 62.07 · Anthropic"></div>
+      <div class="region-marker closed" style="left:87.04285714285714%;" title="GPT-5.6 Sol · 60.93 · OpenAI"></div>
+      <div class="region-marker closed" style="left:87.02857142857144%;" title="Grok 4.6 · 60.92 · SpaceXAI"></div>
+      <div class="region-marker open" style="left:85.28571428571429%;" title="Kimi K3 · 59.70 · Kimi"></div>
+      <div class="region-marker closed" style="left:85.0142857142857%;" title="GLM-5.3 · 59.51 · Z AI"></div>
+      <div class="region-marker closed" style="left:82.97142857142858%;" title="Qwen3.8 Max · 58.08 · Alibaba"></div>
+      <div class="region-marker open" style="left:82.42857142857143%;" title="Qwen3.8 2.4T A95B · 57.70 · Alibaba"></div>
+      <div class="region-marker closed" style="left:81.89999999999999%;" title="Claude Opus 4.8 · 57.33 · Anthropic"></div>
+      <div class="region-marker closed" style="left:81.08571428571429%;" title="Muse Spark 1.2 · 56.76 · Meta"></div>
+      <div class="region-marker closed" style="left:80.82857142857142%;" title="GPT-5.6 Terra · 56.58 · OpenAI"></div>
+      <div class="region-marker closed" style="left:80.44285714285715%;" title="GPT-5.5 · 56.31 · OpenAI"></div>
+      <div class="region-marker closed" style="left:80.04285714285714%;" title="Gemini 3.7 Flash · 56.03 · Google"></div>
+      <div class="region-marker closed" style="left:79.65714285714286%;" title="Grok 4.5 · 55.76 · SpaceXAI"></div>
+      <div class="region-marker closed" style="left:78.94285714285714%;" title="Claude Sonnet 5 · 55.26 · Anthropic"></div>
+      <div class="region-marker closed" style="left:78.51428571428572%;" title="Claude Opus 4.7 · 54.96 · Anthropic"></div>
+      <div class="band-label" style="left: 74.3%; top: 4px;">&plusmn; 2 II</div>
+    </div>
+    <div class="axis-num" style="left:0%;">0</div>
+    <div class="axis-num" style="left:14.3%;">10</div>
+    <div class="axis-num" style="left:28.6%;">20</div>
+    <div class="axis-num" style="left:42.9%;">30</div>
+    <div class="axis-num" style="left:57.1%;">40</div>
+    <div class="axis-num" style="left:71.4%;">50</div>
+    <div class="tick-lbl target" style="left: 74.3%; top: -8px;">Qwen 52</div>
+    <div class="axis-num" style="left:81.4%;">57</div>
+    <div class="axis-num" style="left:85.7%;">60</div>
+    <div class="axis-num" style="left:100%; transform: translateX(-100%);">70</div>
+  </div>
+  <div class="legend-bar">
+    <div class="item"><span class="sw" style="background:var(--purple)"></span>Qwen3.8 27B</div>
+    <div class="item"><span class="sw" style="background:var(--green)"></span>更强的开源</div>
+    <div class="item"><span class="sw" style="background:#555"></span>更强的闭源</div>
+    <div class="item"><span class="sw" style="background:rgba(91,44,145,0.18); border:1px dashed var(--purple)"></span>相当区间（± 2 II）</div>
+  </div>
+</div>
+
+<h2><span class="pill red">强于</span> 16 个模型超过 Qwen3.8 27B <small>(II &gt; 54.02)</small></h2>
+<p class="sub">Anthropic 一家占据 5 席。仅 <b>2 个开源模型</b>能稳压 Qwen3.8 27B：Kimi K3 与 Qwen3.8 2.4T A95B。</p>
+
+<table class="models">
+  <thead>
+    <tr>
+      <th>II</th>
+      <th>差值</th>
+      <th>名称</th>
+      <th>厂商</th>
+      <th>国家</th>
+      <th>参数</th>
+      <th>类型</th>
+      <th>成本</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="mrow">
+  <td class="ii">63.05</td>
+  <td class="diff-cell"><span class="diff pos">+11.03</span></td>
+  <td class="name">
+    <div class="nm">Claude Opus 5</div>
+    <div class="sub">high, low, medium, xhigh</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$2.3369</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">62.07</td>
+  <td class="diff-cell"><span class="diff pos">+10.05</span></td>
+  <td class="name">
+    <div class="nm">Claude Fable 5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$3.1396</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">60.93</td>
+  <td class="diff-cell"><span class="diff pos">+8.91</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.6 Sol</div>
+    <div class="sub">Non-reasoning, high, low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.2312</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">60.92</td>
+  <td class="diff-cell"><span class="diff pos">+8.90</span></td>
+  <td class="name">
+    <div class="nm">Grok 4.6</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.8367</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">59.70</td>
+  <td class="diff-cell"><span class="diff pos">+7.68</span></td>
+  <td class="name">
+    <div class="nm">Kimi K3</div>
+    <div class="sub">low</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#047AFE"></span>Kimi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">2800B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.8375</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">59.51</td>
+  <td class="diff-cell"><span class="diff pos">+7.49</span></td>
+  <td class="name">
+    <div class="nm">GLM-5.3</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">753B</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.6829</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">58.08</td>
+  <td class="diff-cell"><span class="diff pos">+6.06</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.8 Max</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.1320</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">57.70</td>
+  <td class="diff-cell"><span class="diff pos">+5.68</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.8 2.4T A95B</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">2400B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.0919</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">57.33</td>
+  <td class="diff-cell"><span class="diff pos">+5.31</span></td>
+  <td class="name">
+    <div class="nm">Claude Opus 4.8</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$2.0315</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">56.76</td>
+  <td class="diff-cell"><span class="diff pos">+4.74</span></td>
+  <td class="name">
+    <div class="nm">Muse Spark 1.2</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#0089f4"></span>Meta</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3992</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">56.58</td>
+  <td class="diff-cell"><span class="diff pos">+4.56</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.6 Terra</div>
+    <div class="sub">Non-reasoning, high, low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.5080</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">56.31</td>
+  <td class="diff-cell"><span class="diff pos">+4.29</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.5</div>
+    <div class="sub">Non-reasoning, high, low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.1747</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">56.03</td>
+  <td class="diff-cell"><span class="diff pos">+4.01</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3.7 Flash</div>
+    <div class="sub">low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.4022</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">55.76</td>
+  <td class="diff-cell"><span class="diff pos">+3.74</span></td>
+  <td class="name">
+    <div class="nm">Grok 4.5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3601</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">55.26</td>
+  <td class="diff-cell"><span class="diff pos">+3.24</span></td>
+  <td class="name">
+    <div class="nm">Claude Sonnet 5</div>
+    <div class="sub">Non-reasoning</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.7173</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">54.96</td>
+  <td class="diff-cell"><span class="diff pos">+2.94</span></td>
+  <td class="name">
+    <div class="nm">Claude Opus 4.7</div>
+    <div class="sub">Non-reasoning, high</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$2.2285</td>
+</tr>
+  </tbody>
+</table>
+
+<h3>强者要点</h3>
+<div class="insight">
+  <strong>Claude Opus 5（63.05，$2.34）</strong> 是当前 SOTA，比 Qwen3.8 27B 高 +11.03。Anthropic 拿下前 2 席（Opus 5 与 Fable 5）。
+</div>
+<div class="insight gold">
+  <strong>开源天花板：</strong>Kimi K3（59.70）与 Qwen3.8 2.4T A95B（57.70）是仅有的两个在 Qwen3.8 27B 之上的开源。2.4T-A95B 属于同一 Qwen3.8 家族，但采用 MoE 2.4T 总参数 / 95B 激活——是 Qwen 家族向上发展的"下一步"。
+</div>
+<div class="insight blue">
+  <strong>OpenAI 4 个模型</strong>在 Qwen3.8 27B 之上：GPT-5.6 Sol（60.93）、GPT-5.6 Terra（56.58）、GPT-5.5（56.31）。均为推理档，定价 $0.51 – $1.23 / 任务。
+</div>
+
+<h2><span class="pill gold">相当</span> 8 个模型在 ± 2 II 区间 <small>(II ∈ [50.02, 54.02])</small></h2>
+<p class="sub">"贴身肉搏"区。Qwen3.8 27B 夹在 GPT-5.6 Luna（强侧）与 Gemini 3.5 Flash（弱侧）之间。</p>
+
+<table class="models">
+  <thead>
+    <tr>
+      <th>II</th>
+      <th>差值</th>
+      <th>名称</th>
+      <th>厂商</th>
+      <th>国家</th>
+      <th>参数</th>
+      <th>类型</th>
+      <th>成本</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="highlight-qwen">
+      <td class="ii">52.02</td>
+      <td class="diff-cell"><span class="diff zero">± 0</span></td>
+      <td class="name"><div class="nm">Qwen3.8 27B</div><div class="sub">基准锚点</div></td>
+      <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+      <td class="country">中国</td>
+      <td class="num">27B</td>
+      <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+      <td class="num cost"><span class="na">暂无</span></td>
+    </tr>
+    <tr class="mrow">
+  <td class="ii">53.20</td>
+  <td class="diff-cell"><span class="diff pos">+1.18</span></td>
+  <td class="name">
+    <div class="nm">DeepSeek V4 Pro 0813</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#2243e6"></span>DeepSeek</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1600B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2521</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">53.20</td>
+  <td class="diff-cell"><span class="diff pos">+1.18</span></td>
+  <td class="name">
+    <div class="nm">Muse Spark 1.1</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#0089f4"></span>Meta</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2923</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">53.12</td>
+  <td class="diff-cell"><span class="diff pos">+1.10</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.4</div>
+    <div class="sub">Non-reasoning, low</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.1038</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">52.64</td>
+  <td class="diff-cell"><span class="diff pos">+0.62</span></td>
+  <td class="name">
+    <div class="nm">GLM-5.2</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">753B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.4445</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">52.32</td>
+  <td class="diff-cell"><span class="diff pos">+0.30</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.6 Luna</div>
+    <div class="sub">Non-reasoning, high, low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0471</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">51.96</td>
+  <td class="diff-cell"><span class="diff neg">-0.06</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3.5 Flash</div>
+    <div class="sub">medium, minimal</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.6934</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">51.77</td>
+  <td class="diff-cell"><span class="diff neg">-0.25</span></td>
+  <td class="name">
+    <div class="nm">DeepSeek V4 Flash 0731</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#2243e6"></span>DeepSeek</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">284B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.1122</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">51.58</td>
+  <td class="diff-cell"><span class="diff neg">-0.44</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3.6 Flash</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3442</td>
+</tr>
+  </tbody>
+</table>
+
+<h3>相当区间要点</h3>
+<div class="insight">
+  <strong>该区间 4 开源 vs 4 闭源。</strong>DeepSeek V4 Pro 0813（53.20）与 Meta Muse Spark 1.1（53.20）并列首位。
+</div>
+<div class="insight gold">
+  <strong>OpenAI 最近的对等：GPT-5.6 Luna（52.32，$0.05）。</strong>这是 OpenAI 的"小型推理"档——成本结构与 Qwen3.8 27B 几乎一致，仅高 0.30 II。
+</div>
+<div class="insight blue">
+  <strong>Google 最近的对等：Gemini 3.5 Flash（51.96，$0.69）。</strong>仅比 Qwen3.8 27B 低 0.06 II——误差范围内。
+</div>
+<div class="insight green">
+  <strong>DeepSeek V4 Pro 0813（53.20，$0.25）</strong>是公开定价下与 Qwen3.8 27B 最直接可比、得分最高的开源模型。
+</div>
+
+<h2><span class="pill blue">弱于</span> 前 60 个弱于 Qwen 的模型 — "明显落败"<small>（每族最强变体）</small></h2>
+<p class="sub">396 个弱于 Qwen3.8 27B 的模型，这里展示前 60 个。值得注意的是，即便是顶级闭源模型 <b>Claude Opus 4.6</b>、<b>GPT-5.2</b>、<b>Claude Sonnet 4.6 (max)</b> 都低于 Qwen3.8 27B。</p>
+
+<h3>高端弱于（II 35 – 50）</h3>
+<table class="models">
+  <thead>
+    <tr>
+      <th>II</th>
+      <th>差值</th>
+      <th>名称</th>
+      <th>厂商</th>
+      <th>国家</th>
+      <th>参数</th>
+      <th>类型</th>
+      <th>成本</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="mrow">
+  <td class="ii">48.37</td>
+  <td class="diff-cell"><span class="diff neg">-3.65</span></td>
+  <td class="name">
+    <div class="nm">Claude Sonnet 4.6</div>
+    <div class="sub">Non-reasoning, Non-reasoning, Low Effort</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$1.2182</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">47.74</td>
+  <td class="diff-cell"><span class="diff neg">-4.28</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3.1 Pro Preview</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3346</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">47.36</td>
+  <td class="diff-cell"><span class="diff neg">-4.66</span></td>
+  <td class="name">
+    <div class="nm">Motif 3</div>
+    <div class="sub">Beta</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#6a93eb"></span>Motif Technologies</td>
+  <td class="country"><span class="country">韩国</span></td>
+  <td class="num">314B</td>
+  <td class="types"><span class="badge both">双</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">46.71</td>
+  <td class="diff-cell"><span class="diff neg">-5.31</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.7 Max</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.5413</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">45.51</td>
+  <td class="diff-cell"><span class="diff neg">-6.51</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.3 Codex</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">45.40</td>
+  <td class="diff-cell"><span class="diff neg">-6.62</span></td>
+  <td class="name">
+    <div class="nm">MiniMax-M3</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#EB3568"></span>MiniMax</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">428B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.1387</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">45.27</td>
+  <td class="diff-cell"><span class="diff neg">-6.75</span></td>
+  <td class="name">
+    <div class="nm">DeepSeek V4 Pro</div>
+    <div class="sub">, high</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#2243e6"></span>DeepSeek</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1600B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0474</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">45.14</td>
+  <td class="diff-cell"><span class="diff neg">-6.88</span></td>
+  <td class="name">
+    <div class="nm">Kimi K2.6</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#047AFE"></span>Kimi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1000B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3653</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">44.93</td>
+  <td class="diff-cell"><span class="diff neg">-7.09</span></td>
+  <td class="name">
+    <div class="nm">Claude Opus 4.6</div>
+    <div class="sub">high</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">44.25</td>
+  <td class="diff-cell"><span class="diff neg">-7.77</span></td>
+  <td class="name">
+    <div class="nm">Muse Spark</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#0089f4"></span>Meta</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">43.34</td>
+  <td class="diff-cell"><span class="diff neg">-8.68</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.2</div>
+    <div class="sub">, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">43.02</td>
+  <td class="diff-cell"><span class="diff neg">-9.00</span></td>
+  <td class="name">
+    <div class="nm">Kimi K2.7 Code</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#047AFE"></span>Kimi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1000B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2220</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">42.88</td>
+  <td class="diff-cell"><span class="diff neg">-9.14</span></td>
+  <td class="name">
+    <div class="nm">MiMo-V2.5-Pro</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff6900"></span>Xiaomi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1023B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0339</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">42.29</td>
+  <td class="diff-cell"><span class="diff neg">-9.73</span></td>
+  <td class="name">
+    <div class="nm">Inkling</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#676767"></span>Thinking Machines</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">975B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3389</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">42.21</td>
+  <td class="diff-cell"><span class="diff neg">-9.81</span></td>
+  <td class="name">
+    <div class="nm">Hy3</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#5CB9FF"></span>Tencent</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">299B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0357</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">42.12</td>
+  <td class="diff-cell"><span class="diff neg">-9.90</span></td>
+  <td class="name">
+    <div class="nm">DeepSeek V4 Flash</div>
+    <div class="sub">, high</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#2243e6"></span>DeepSeek</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">284B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0673</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.87</td>
+  <td class="diff-cell"><span class="diff neg">-10.15</span></td>
+  <td class="name">
+    <div class="nm">Claude Opus 4.5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.74</td>
+  <td class="diff-cell"><span class="diff neg">-10.28</span></td>
+  <td class="name">
+    <div class="nm">Nex-N2-Pro</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#0351bc"></span>Nex AGI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">397B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.64</td>
+  <td class="diff-cell"><span class="diff neg">-10.38</span></td>
+  <td class="name">
+    <div class="nm">Solar Pro 4</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#7c59f5"></span>Upstage</td>
+  <td class="country"><span class="country">韩国</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2231</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.37</td>
+  <td class="diff-cell"><span class="diff neg">-10.65</span></td>
+  <td class="name">
+    <div class="nm">MiMo-V2-Pro</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff6900"></span>Xiaomi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.22</td>
+  <td class="diff-cell"><span class="diff neg">-10.80</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.2 Codex</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.18</td>
+  <td class="diff-cell"><span class="diff neg">-10.84</span></td>
+  <td class="name">
+    <div class="nm">Inkling Small</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#676767"></span>Thinking Machines</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">266B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0735</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">41.07</td>
+  <td class="diff-cell"><span class="diff neg">-10.95</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.6 Max Preview</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.97</td>
+  <td class="diff-cell"><span class="diff neg">-11.05</span></td>
+  <td class="name">
+    <div class="nm">GLM-5.1</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">744B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3042</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.94</td>
+  <td class="diff-cell"><span class="diff neg">-11.08</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.4 mini</div>
+    <div class="sub">, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.4948</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.65</td>
+  <td class="diff-cell"><span class="diff neg">-11.37</span></td>
+  <td class="name">
+    <div class="nm">Grok Build 0.1 0616</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2252</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.61</td>
+  <td class="diff-cell"><span class="diff neg">-11.41</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3 Pro Preview</div>
+    <div class="sub">low</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.55</td>
+  <td class="diff-cell"><span class="diff neg">-11.47</span></td>
+  <td class="name">
+    <div class="nm">GLM-5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">744B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">40.49</td>
+  <td class="diff-cell"><span class="diff neg">-11.53</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.6 Plus</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3569</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">39.85</td>
+  <td class="diff-cell"><span class="diff neg">-12.17</span></td>
+  <td class="name">
+    <div class="nm">JT-4.1 Flash 236B A21B</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#00b8ea"></span>China Mobile</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">236B</td>
+  <td class="types"><span class="badge closed">闭源</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">39.71</td>
+  <td class="diff-cell"><span class="diff neg">-12.31</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.4 nano</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.1493</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">39.71</td>
+  <td class="diff-cell"><span class="diff neg">-12.31</span></td>
+  <td class="name">
+    <div class="nm">Agnes 2.5 Pro Alpha</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1521a9"></span>Sapiens AI</td>
+  <td class="country"><span class="country">新加坡</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">39.37</td>
+  <td class="diff-cell"><span class="diff neg">-12.65</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.7 Plus</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2424</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">39.05</td>
+  <td class="diff-cell"><span class="diff neg">-12.97</span></td>
+  <td class="name">
+    <div class="nm">GLM-5-Turbo</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">38.87</td>
+  <td class="diff-cell"><span class="diff neg">-13.15</span></td>
+  <td class="name">
+    <div class="nm">MiniMax-M2.7</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#EB3568"></span>MiniMax</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">230B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0777</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">38.74</td>
+  <td class="diff-cell"><span class="diff neg">-13.28</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3 Flash</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">38.32</td>
+  <td class="diff-cell"><span class="diff neg">-13.70</span></td>
+  <td class="name">
+    <div class="nm">Nemotron 3 Ultra</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#76b900"></span>NVIDIA</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">550B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3827</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">38.04</td>
+  <td class="diff-cell"><span class="diff neg">-13.98</span></td>
+  <td class="name">
+    <div class="nm">MiMo-V2.5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff6900"></span>Xiaomi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">310B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0104</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.95</td>
+  <td class="diff-cell"><span class="diff neg">-14.07</span></td>
+  <td class="name">
+    <div class="nm">Grok 4.3</div>
+    <div class="sub">Non-reasoning, low, medium</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.1454</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.95</td>
+  <td class="diff-cell"><span class="diff neg">-14.07</span></td>
+  <td class="name">
+    <div class="nm">Grok 4.20 0309 v2</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.82</td>
+  <td class="diff-cell"><span class="diff neg">-14.20</span></td>
+  <td class="name">
+    <div class="nm">Ling 3.0 Flash</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#4fb5ff"></span>InclusionAI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">124B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0377</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.70</td>
+  <td class="diff-cell"><span class="diff neg">-14.32</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.6 27B</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">27.8B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2918</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.47</td>
+  <td class="diff-cell"><span class="diff neg">-14.55</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.1</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3040</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.44</td>
+  <td class="diff-cell"><span class="diff neg">-14.58</span></td>
+  <td class="name">
+    <div class="nm">Grok 4.20 0309</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#736cd3"></span>SpaceXAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.44</td>
+  <td class="diff-cell"><span class="diff neg">-14.58</span></td>
+  <td class="name">
+    <div class="nm">Gemini 3.5 Flash-Lite</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#34A853"></span>Google</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">medium</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0965</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.43</td>
+  <td class="diff-cell"><span class="diff neg">-14.59</span></td>
+  <td class="name">
+    <div class="nm">Solar Open2 250B</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#7c59f5"></span>Upstage</td>
+  <td class="country"><span class="country">韩国</span></td>
+  <td class="num">250B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.39</td>
+  <td class="diff-cell"><span class="diff neg">-14.63</span></td>
+  <td class="name">
+    <div class="nm">Claude 4.5 Sonnet</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.4643</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.32</td>
+  <td class="diff-cell"><span class="diff neg">-14.70</span></td>
+  <td class="name">
+    <div class="nm">MiMo-V2-Omni-0327</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff6900"></span>Xiaomi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">37.04</td>
+  <td class="diff-cell"><span class="diff neg">-14.98</span></td>
+  <td class="name">
+    <div class="nm">GPT-5 Codex</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">36.02</td>
+  <td class="diff-cell"><span class="diff neg">-16.00</span></td>
+  <td class="name">
+    <div class="nm">Kimi K2.5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#047AFE"></span>Kimi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">1000B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0964</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.87</td>
+  <td class="diff-cell"><span class="diff neg">-16.15</span></td>
+  <td class="name">
+    <div class="nm">MiMo-V2-Omni</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff6900"></span>Xiaomi</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.60</td>
+  <td class="diff-cell"><span class="diff neg">-16.42</span></td>
+  <td class="name">
+    <div class="nm">GPT-5.1 Codex</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.35</td>
+  <td class="diff-cell"><span class="diff neg">-16.67</span></td>
+  <td class="name">
+    <div class="nm">GLM 5V Turbo</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">—</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.31</td>
+  <td class="diff-cell"><span class="diff neg">-16.71</span></td>
+  <td class="name">
+    <div class="nm">GPT-5</div>
+    <div class="sub">ChatGPT, low, medium, minimal</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1f1f1f"></span>OpenAI</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.2572</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.06</td>
+  <td class="diff-cell"><span class="diff neg">-16.96</span></td>
+  <td class="name">
+    <div class="nm">Muse Glimmer</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#0089f4"></span>Meta</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">30B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.0732</td>
+</tr>
+<tr class="mrow">
+  <td class="ii">35.01</td>
+  <td class="diff-cell"><span class="diff neg">-17.01</span></td>
+  <td class="name">
+    <div class="nm">A.X-K2</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#E1002A"></span>SK Telecom</td>
+  <td class="country"><span class="country">韩国</span></td>
+  <td class="num">692B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+  </tbody>
+</table>
+
+<h3>中端弱于（II 25 – 35）</h3>
+<table class="models">
+  <thead>
+    <tr>
+      <th>II</th>
+      <th>差值</th>
+      <th>名称</th>
+      <th>厂商</th>
+      <th>国家</th>
+      <th>参数</th>
+      <th>类型</th>
+      <th>成本</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="mrow">
+  <td class="ii">34.60</td>
+  <td class="diff-cell"><span class="diff neg">-17.42</span></td>
+  <td class="name">
+    <div class="nm">Qwen3.5 27B</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#ff7018"></span>Alibaba</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">27.8B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">34.54</td>
+  <td class="diff-cell"><span class="diff neg">-17.48</span></td>
+  <td class="name">
+    <div class="nm">Claude 4.1 Opus</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#cc785c"></span>Anthropic</td>
+  <td class="country"><span class="country">美国</span></td>
+  <td class="num">large</td>
+  <td class="types"><span class="badge closed">闭源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">34.47</td>
+  <td class="diff-cell"><span class="diff neg">-17.55</span></td>
+  <td class="name">
+    <div class="nm">MiniMax-M2.5</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#EB3568"></span>MiniMax</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">230B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost"><span class="na">暂无</span></td>
+</tr>
+<tr class="mrow">
+  <td class="ii">34.46</td>
+  <td class="diff-cell"><span class="diff neg">-17.56</span></td>
+  <td class="name">
+    <div class="nm">GLM-4.7</div>
+    <div class="sub">&#8212;</div>
+  </td>
+  <td class="creator"><span class="creator-dot" style="background:#1c7ff8"></span>Z AI</td>
+  <td class="country"><span class="country">中国</span></td>
+  <td class="num">357B</td>
+  <td class="types"><span class="badge open">开源</span><span class="badge reasoning">推理</span></td>
+  <td class="num cost">$0.3586</td>
+</tr>
+  </tbody>
+</table>
+
+<h3>全部 396 个弱于 Qwen 的模型：按 II 分段分布</h3>
+<div class="histogram">
+  <div class="seg red2" style="flex: 8;" title="45 - 50">8</div>
+  <div class="seg red" style="flex: 21;" title="40 - 45">21</div>
+  <div class="seg darkblue" style="flex: 27;" title="35 - 40">27</div>
+  <div class="seg blue" style="flex: 30;" title="30 - 35">30</div>
+  <div class="seg blue2" style="flex: 20;" title="25 - 30">20</div>
+  <div class="seg" style="flex: 30; background:#6a89b3;" title="20 - 25">30</div>
+  <div class="seg" style="flex: 41; background:#8ba0c0;" title="15 - 20">41</div>
+  <div class="seg" style="flex: 55; background:#a8b6cb;" title="10 - 15">55</div>
+  <div class="seg" style="flex: 76; background:#c3cad6;" title="5 - 10">76</div>
+  <div class="seg" style="flex: 88; background:#d8dce3; color: #555;" title="0 - 5">88</div>
+</div>
+<div class="legend-bar">
+  <div class="item"><span class="sw" style="background:#cf4e44"></span>II 45-50</div>
+  <div class="item"><span class="sw" style="background:#b3261e"></span>II 40-45</div>
+  <div class="item"><span class="sw" style="background:#2c4a7a"></span>II 35-40</div>
+  <div class="item"><span class="sw" style="background:#1958b3"></span>II 30-35</div>
+  <div class="item"><span class="sw" style="background:#4a83d6"></span>II 25-30</div>
+  <div class="item"><span class="sw" style="background:#6a89b3"></span>II 20-25</div>
+  <div class="item"><span class="sw" style="background:#8ba0c0"></span>II 15-20</div>
+  <div class="item"><span class="sw" style="background:#a8b6cb"></span>II 10-15</div>
+  <div class="item"><span class="sw" style="background:#c3cad6"></span>II &lt; 10</div>
+</div>
+
+<h2>总结洞察</h2>
+
+<div class="insight">
+  <strong>1. Qwen3.8 27B 的头条定位。</strong>它是全球得分最高的 27B 稠密模型。只有参数量数百亿的 MoE 模型（Claude Opus 5、Claude Fable 5、GPT-5.6 Sol/Terra、Grok 4.6、Kimi K3、GLM-5.3、Qwen3.8 Max、Qwen3.8 2.4T A95B、Claude Opus 4.8、Muse Spark 1.2、GPT-5.5、Gemini 3.7 Flash、Grok 4.5、Claude Sonnet 5、Claude Opus 4.7）能稳定胜过它。
+</div>
+
+<div class="insight gold">
+  <strong>2. 中国开源阵营在 52 II 撞线。</strong>DeepSeek V4 Pro 0813（53.20）、GLM-5.2（52.64）、DeepSeek V4 Flash 0731（51.77）——全部在 ± 2 II 之内。顶级开源与中端闭源（Anthropic Sonnet 4.6 在 48.37、GPT-5.2 在 43.34）的差距已缩减到 <b>约 10 II</b>，而非 20+。
+</div>
+
+<div class="insight blue">
+  <strong>3. Anthropic 旗舰跑不过 Qwen3.8 27B。</strong>Claude Opus 4.6（max，44.93）落后 7 II。Anthropic 高端档（Opus 5 家族）落在 60-63，要跳出 Qwen3.8 27B 的射程需要 ~9 II 的跃迁。
+</div>
+
+<div class="insight green">
+  <strong>4. 强过 Qwen3.8 27B 的开源只有 2 个：</strong>Kimi K3（59.70）与 Qwen3.8 2.4T A95B（57.70）。其余 14 个在 Qwen 之上的都是 Anthropic、OpenAI、SpaceXAI、Google、Z AI、阿里闭源。
+</div>
+
+<div class="insight">
+  <strong>5. Qwen3.8 27B vs Qwen3.x 历史。</strong>Qwen3.5 27B 得分 34.60 —— Qwen3.8 27B 领先 +17.42。Qwen3.6 27B 得分 37.70 —— Qwen3.8 27B 领先 +14.32。Qwen3.7 Max（闭源）46.71 —— Qwen3.8 27B 领先 +5.31。Qwen3.8 这一代完成了一次代际跃迁。
+</div>
+
+<div class="insight gold">
+  <strong>6. 成本对比。</strong>所有可比顶级模型每任务定价 $0.05 – $1.50。Qwen3.8 27B 无公开每任务定价（仅 raw token 价格：$0.45 in / $3.20 out / $0.05 cache 每 1M tokens）。作为单任务 47k 输出 token 的推理型开源模型，实际使用成本主要被输出 token 主导。
+</div>
+
+<footer>
+  <p>
+    数据: <a href="https://artificialanalysis.ai" target="_blank">artificialanalysis.ai</a>
+    &middot; Intelligence Index v4.1.1 由 9 项基准综合 &middot;
+    610 个模型、421 个独立模型族、597 个含 II 分数 &middot;
+    X 轴成本 = 加权平均每任务美元（log10 标尺）
+  </p>
+  <p>
+    方法说明：表格中每个"名称"代表一个<em>模型族</em>，去除推理档位与日期后缀后去重，取最强变体 II。差值 = II - Qwen3.8 27B 的 II（52.02）。开源指权重可公开下载；闭源指 API-only 或专有。
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
