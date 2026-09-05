@@ -43,25 +43,6 @@
   .roi-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .toolbar label { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 6px; }
   .toolbar input[type=range] { width: 120px; }
-  .upload-btn {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--accent);
-    padding: 4px 12px; border-radius: 4px;
-    cursor: pointer; font: inherit; font-size: 12px;
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .upload-btn:hover { background: var(--accent); color: #fff; }
-  .upload-btn:disabled { opacity: .5; cursor: wait; }
-  .upload-hint {
-    position: absolute; top: 50px; right: 16px;
-    background: var(--panel); border: 1px solid var(--accent);
-    color: var(--text); font-size: 11px;
-    padding: 6px 10px; border-radius: 4px;
-    max-width: 280px; line-height: 1.5;
-    z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,.5);
-  }
-  .upload-hint b { color: var(--accent); }
 
   .main {
     height: calc(100vh - 44px);
@@ -250,12 +231,6 @@
   <h1>AVIF CRF Compare</h1>
   <div class="sep"></div>
   <div class="roi-bar" id="roiBar"></div>
-  <button class="upload-btn" id="uploadBtn">📁 Upload your own</button>
-  <input type="file" id="uploadInput" accept="image/*" multiple hidden>
-</div>
-<div class="upload-hint" id="uploadHint" style="display:none">
-  Select <b>1 reference</b> image + <b>1–6 encoded</b> versions<br>
-  (JPEG / PNG / AVIF / WebP, any size)
 </div>
 
 <div class="main">
@@ -348,9 +323,6 @@ const stage    = $('#stage');
 const grid     = $('#grid');
 const rightPane = $('#rightPane');
 const magnifier = $('#magnifier');
-const uploadBtn  = $('#uploadBtn');
-const uploadInput= $('#uploadInput');
-const uploadHint = $('#uploadHint');
 const magSvg    = $('#magSvg');
 const magImg    = $('#magImg');
 
@@ -422,8 +394,7 @@ async function buildGrid() {
     crop.className = 'crop';
     const name = document.createElement('div');
     name.className = 'name';
-    const sub = f.filename ? `<span style="display:block;color:var(--muted);font-size:10px;margin-top:1px;font-weight:400">${shortName(f.filename, 26)}</span>` : '';
-    name.innerHTML = `<div><b>CRF ${f.crf}</b>${sub}</div><span class="info">${fmtBytes(f.bytes)}<span class="sep">·</span><span class="fmt">${f.fmt}</span></span>`;
+    name.innerHTML = `<b>CRF ${f.crf}</b><span class="info">${fmtBytes(f.bytes)}<span class="sep">·</span><span class="fmt">${f.fmt}</span></span>`;
     cell.appendChild(crop);
     cell.appendChild(name);
     grid.appendChild(cell);
@@ -511,86 +482,6 @@ function render() {
 
 // ============ Init ============
 selectPreset(0);   // activate "Center" button + first render (safe: SVGs not yet created)
-
-// ============ Upload handler (replace embedded sample with user files) ============
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error('read failed'));
-    reader.readAsDataURL(file);
-  });
-}
-function fmtMime(t) {
-  const m = t.split('/')[1] || 'IMG';
-  return m.toUpperCase();
-}
-function shortName(s, n=22) {
-  if (s.length <= n) return s;
-  return '…' + s.slice(-n+1);
-}
-
-async function loadFromFiles(files) {
-  if (files.length < 2) {
-    alert('Please select at least 2 images:\n  1 reference (e.g. original JPEG/PNG)\n  1+ encoded versions (e.g. AVIF at different CRF)');
-    return;
-  }
-  uploadBtn.disabled = true;
-  uploadBtn.textContent = '⏳ Loading…';
-  uploadHint.style.display = 'none';
-  try {
-    const dataUrls = await Promise.all(files.map(fileToDataUrl));
-    // File #0 = reference, files #1..N = encoded (in slot order)
-    IMG.reference = dataUrls[0];
-    document.getElementById('refBadge').innerHTML =
-      `${fmtBytes(files[0].size)}<span class="sep">·</span><span class="fmt">${fmtMime(files[0].type)}</span><span class="sep" style="margin-left:6px"></span><span style="color:var(--muted)">${shortName(files[0].name)}</span>`;
-    for (let i = 0; i < CRF_FILES.length; i++) {
-      const idx = i + 1;
-      if (idx < dataUrls.length) {
-        IMG[CRF_FILES[i].name] = dataUrls[idx];
-        CRF_FILES[i].bytes = files[idx].size;
-        CRF_FILES[i].fmt   = fmtMime(files[idx].type);
-        CRF_FILES[i].filename = files[idx].name;
-      } else {
-        delete CRF_FILES[i].filename;   // back to default base64 (still in IMG)
-      }
-    }
-    // Re-init: reload refImg, rebuild grid, restore magnifier
-    refImg.src = IMG.reference;
-    await new Promise((resolve) => {
-      const done = () => resolve();
-      refImg.onload = done;
-      if (refImg.complete && refImg.naturalWidth) done();
-    });
-    state.imgW = refImg.naturalWidth;
-    state.imgH = refImg.naturalHeight;
-    if (magImg) {
-      magImg.setAttribute('href', IMG.reference);
-      magImg.setAttribute('width', state.imgW);
-      magImg.setAttribute('height', state.imgH);
-    }
-    await buildGrid();
-    render();
-    setTimeout(() => magnifier.classList.remove('hidden'), 200);
-    uploadBtn.textContent = '✓ Loaded — upload again';
-    setTimeout(() => { uploadBtn.textContent = '📁 Upload your own'; }, 1800);
-  } catch (e) {
-    alert('Failed to load: ' + e.message);
-    uploadBtn.textContent = '📁 Upload your own';
-  } finally {
-    uploadBtn.disabled = false;
-    uploadInput.value = '';
-  }
-}
-
-uploadBtn.addEventListener('mouseenter', () => {
-  if (uploadInput.files.length === 0) uploadHint.style.display = 'block';
-});
-uploadBtn.addEventListener('mouseleave', () => {
-  uploadHint.style.display = 'none';
-});
-uploadBtn.addEventListener('click', () => uploadInput.click());
-uploadInput.addEventListener('change', (e) => loadFromFiles(Array.from(e.target.files)));
 
 // Build grid after original image loads
 refImg.src = IMG.reference;

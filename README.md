@@ -6,12 +6,7 @@ A personal collection of self-contained HTML reports and interactive tools, host
 
 ## What lives here
 
-Each sub-folder is one self-contained web page — open the URL and it works, no build, no server.
-
-You can:
-
-- **Browse** the pre-built pages with their bundled sample data
-- **Drop in your own files** where the page supports it (e.g. upload your own images for a side-by-side codec comparison)
+Each sub-folder is one self-contained web page — open the URL and it works, no build, no server, no upload step. Everything ships inside the HTML itself.
 
 ## Routing rules
 
@@ -41,7 +36,7 @@ You can:
 
 - All pages are **self-contained** — open from `file://` or any host, no setup
 - Each page lives in its own folder so URLs are stable and namespaced
-- For interactive tools, prefer letting users **upload their own files** in addition to a bundled sample — the page works either way
+- For interactive tools, prefer inlining sample data so the page works offline
 - For data-heavy reports, inline raw data so the file works offline
 - Use semantic kebab-case folder names; never rename a folder after launch (URLs are permanent)
 
