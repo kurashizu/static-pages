@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="zh" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading the METR Curve — 读懂 METR 曲线</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+:root{
+  --paper:#EFF1F2;
+  --surface:#FFFFFF;
+  --ink:#16242B;
+  --ink-soft:#4A5B63;
+  --ink-mute:#7C8B92;
+  --rule:#D3D9DA;
+  --rule-soft:#E4E8E9;
+  --p50:#7A5AA8;
+  --p50-bg:#F0EBF7;
+  --p80:#B8761E;
+  --p80-bg:#F9EFDF;
+  --measure:68ch;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:17.5px;line-height:1.72;
+  font-variant-numeric:tabular-nums;
+}
+html[data-lang="zh"] body{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;
+}
+html[data-lang="zh"] [lang="en"]{display:none}
+html[data-lang="en"] [lang="zh"]{display:none}
+
+h1,h2,h3,h4,.ui,th,figcaption,.rail,.tag,.num{font-family:"IBM Plex Sans",-apple-system,system-ui,sans-serif}
+html[data-lang="zh"] h1,html[data-lang="zh"] h2,html[data-lang="zh"] h3,html[data-lang="zh"] h4{
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
+
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:1fr;max-width:1180px;margin:0 auto;padding:0 24px}
+@media(min-width:1080px){
+  .shell{grid-template-columns:216px minmax(0,1fr);gap:56px;padding:0 40px}
+}
+.rail{display:none}
+@media(min-width:1080px){
+  .rail{display:block;position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:40px 0 40px;font-size:13.5px;line-height:1.5}
+}
+.rail a{display:block;color:var(--ink-mute);text-decoration:none;padding:5px 0;border-left:2px solid transparent;padding-left:12px;margin-left:-14px;transition:color .15s,border-color .15s}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--ink);border-left-color:var(--ink)}
+.rail .grp{margin-top:20px;color:var(--ink);font-weight:600;padding-left:12px;margin-left:-14px;font-size:12.5px}
+main{max-width:var(--measure);padding:0 0 140px}
+
+/* ---------- language toggle ---------- */
+.langbar{position:sticky;top:0;z-index:20;background:var(--paper);padding:14px 0 12px;margin-bottom:0}
+@media(min-width:1080px){.langbar{position:fixed;top:26px;right:32px;padding:0;background:none}}
+.toggle{display:inline-flex;border:1px solid var(--rule);background:var(--surface);border-radius:3px;overflow:hidden}
+.toggle button{
+  font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;
+  padding:6px 14px;border:0;background:none;color:var(--ink-mute);cursor:pointer;
+}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.toggle button:focus-visible{outline:2px solid var(--p50);outline-offset:-2px}
+
+/* ---------- masthead ---------- */
+.masthead{padding:26px 0 0}
+@media(min-width:1080px){.masthead{padding:64px 0 0}}
+h1{font-size:clamp(30px,5.4vw,46px);line-height:1.12;font-weight:600;letter-spacing:-.022em;margin:0 0 14px}
+.sub{font-size:clamp(17px,2.4vw,21px);line-height:1.4;color:var(--ink-soft);font-weight:400;margin:0 0 26px;max-width:34ch}
+html[data-lang="en"] .sub{font-family:"Newsreader",serif;font-style:italic}
+.meta{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;color:var(--ink-mute);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:9px 0;display:flex;gap:22px;flex-wrap:wrap}
+
+/* ---------- typography ---------- */
+h2{font-size:14px;font-weight:600;letter-spacing:.04em;color:var(--ink);margin:88px 0 6px;padding-bottom:8px;border-bottom:1.5px solid var(--ink)}
+h3{font-size:clamp(20px,3vw,25px);font-weight:600;line-height:1.3;letter-spacing:-.012em;margin:44px 0 12px}
+h2 + h3{margin-top:22px}
+h4{font-size:16.5px;font-weight:600;margin:30px 0 8px;color:var(--ink)}
+p{margin:0 0 17px}
+a{color:var(--ink);text-underline-offset:2px;text-decoration-color:var(--ink-mute)}
+strong{font-weight:600}
+ul,ol{padding-left:1.15em;margin:0 0 17px}
+li{margin-bottom:7px}
+.lede{font-size:1.1em;line-height:1.6;color:var(--ink-soft)}
+hr{border:0;border-top:1px solid var(--rule);margin:56px 0}
+
+/* ---------- the two-series coding ---------- */
+.k50{color:var(--p50);font-weight:500;white-space:nowrap}
+.k80{color:var(--p80);font-weight:500;white-space:nowrap}
+.keybox{display:flex;gap:26px;flex-wrap:wrap;font-family:"IBM Plex Sans",sans-serif;font-size:13px;margin:18px 0 26px;padding:12px 16px;background:var(--surface);border:1px solid var(--rule-soft)}
+.keybox div{display:flex;gap:8px;align-items:baseline}
+.swatch{width:16px;height:3px;flex:0 0 16px;transform:translateY(-3px)}
+
+/* ---------- pull / marginal notes ---------- */
+.pull{margin:30px 0;padding:2px 0 2px 20px;border-left:3px solid var(--ink);font-size:1.06em;line-height:1.5;color:var(--ink)}
+.pull p{margin:0}
+.note{background:var(--surface);border:1px solid var(--rule-soft);padding:18px 20px;margin:26px 0;font-size:.95em}
+.note p:last-child{margin-bottom:0}
+.note .tag{font-size:11.5px;font-weight:600;letter-spacing:.05em;color:var(--ink-mute);display:block;margin-bottom:7px}
+
+/* ---------- tables: booktabs ---------- */
+.tw{overflow-x:auto;margin:26px 0 30px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-family:"IBM Plex Sans",sans-serif;line-height:1.45}
+html[data-lang="zh"] table{font-family:"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px}
+caption{caption-side:top;text-align:left;font-size:12.5px;color:var(--ink-mute);padding-bottom:9px;font-family:"IBM Plex Sans",sans-serif}
+th{font-weight:600;text-align:left;padding:8px 14px 8px 0;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink)}
+td{padding:7px 14px 7px 0;border-bottom:1px solid var(--rule-soft)}
+tr:last-child td{border-bottom:1.5px solid var(--ink)}
+td.n,th.n{text-align:right;padding-right:0;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--surface)}
+td.c50{color:var(--p50)}
+td.c80{color:var(--p80)}
+
+/* ---------- figures ---------- */
+figure{margin:34px 0;padding:0}
+.fig{background:var(--surface);border:1px solid var(--rule-soft);padding:18px 14px 8px}
+figure svg{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--ink-mute);line-height:1.5;margin-top:11px;padding-left:2px}
+svg text{font-family:"IBM Plex Sans",sans-serif}
+
+/* ---------- math ---------- */
+.katex-display{margin:24px 0;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.katex{font-size:1.02em}
+.boxed{background:var(--surface);border:1px solid var(--rule);padding:6px 0;margin:26px 0}
+
+/* ---------- code block ---------- */
+pre{background:var(--ink);color:#DCE4E6;padding:18px 20px;overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.65;margin:26px 0}
+pre .cm{color:#8FA3AA}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule);margin-top:80px;padding-top:24px;font-size:13.5px;color:var(--ink-soft)}
+footer ul{padding-left:1.1em}
+footer li{margin-bottom:5px}
+
+:focus-visible{outline:2px solid var(--p50);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){
+  .draw{stroke-dasharray:1400;stroke-dashoffset:1400;animation:d 1.5s cubic-bezier(.4,0,.2,1) .25s forwards}
+  @keyframes d{to{stroke-dashoffset:0}}
+}
+</style>
+</head>
+<body>
+
+<div class="langbar">
+  <div class="toggle" role="group" aria-label="Language / 语言">
+    <button id="b-zh" aria-pressed="true" onclick="setLang('zh')">中文</button>
+    <button id="b-en" aria-pressed="false" onclick="setLang('en')">English</button>
+  </div>
+</div>
+
+<div class="shell">
+
+<nav class="rail" aria-label="Contents">
+  <div class="grp"><span lang="zh">目录</span><span lang="en">Contents</span></div>
+  <a href="#p1"><span lang="zh">一 · 这台仪器</span><span lang="en">I — The instrument</span></a>
+  <a href="#p2"><span lang="zh">二 · 曲线说了什么</span><span lang="en">II — What it says</span></a>
+  <a href="#p3"><span lang="zh">三 · 曲线往哪走</span><span lang="en">III — Where it goes</span></a>
+  <a href="#p4"><span lang="zh">四 · 曲线看不见什么</span><span lang="en">IV — What it can't see</span></a>
+  <a href="#p5"><span lang="zh">五 · 在曲线下工作</span><span lang="en">V — Working under it</span></a>
+  <a href="#p6"><span lang="zh">六 · 曲线之外</span><span lang="en">VI — Beyond software</span></a>
+  <a href="#end"><span lang="zh">结语</span><span lang="en">Closing</span></a>
+</nav>
+
+<main>
+
+<header class="masthead">
+  <h1><span lang="zh">读懂 METR 曲线</span><span lang="en">Reading the METR Curve</span></h1>
+  <p class="sub"><span lang="zh">一个测量结果揭示的自动化边界、价值迁移与法律分界</span><span lang="en">What a single measurement reveals about automation, value, and law</span></p>
+  <div class="meta">
+    <span lang="zh">技术研究报告</span><span lang="en">Technical research report</span>
+    <span>2026-09</span>
+    <span lang="zh">数据截至 Time Horizon 1.1（2026-05）</span><span lang="en">Data current to Time Horizon 1.1 (May 2026)</span>
+  </div>
+</header>
+
+<div lang="zh">
+<p class="lede" style="margin-top:30px">METR 每个模型只发布一个数字。这个数字很奇怪——不是准确率,不是分数,而是一个<strong>时长</strong>:以人类专家完成所需的时间衡量,模型在给定可靠性下能完成多长的任务。</p>
+<p>它是当前 AI 评测领域最有用的数字,而几乎所有人都读错了它。</p>
+<p>更值得注意的是它背后的<em>方法论</em>。为了能测出任何东西,METR 必须把任务做成自包含、明确定义、可自动判分的。这三个约束不是偶然的技术细节——它们恰好描述了自动化本身的边界。顺着这个含义往外推,还会落到哪些数字产品保值、以及版权保护什么。</p>
+<p>本报告从这台仪器讲起,说清它说了什么,然后把这套框架推到它被设计的领域之外。</p>
+</div>
+<div lang="en">
+<p class="lede" style="margin-top:30px">METR publishes one number per model. It is a strange number — not an accuracy, not a score, but a <strong>duration</strong>: how long a task, measured by how long a human expert takes, a model can complete at a given reliability.</p>
+<p>It is the most useful number in AI evaluation right now, and almost everyone reads it wrong.</p>
+<p>More interestingly, the <em>methodology</em> behind it encodes a general theory of what can be automated. METR had to make their tasks self-contained, well-specified and algorithmically scorable in order to measure anything at all. Those constraints are not incidental — they describe the boundary of automation itself. Follow the implication outward and it lands on which digital goods hold value, and on what copyright protects.</p>
+<p>This report starts with the instrument, works through what it says, then pushes the framework past the domain it was built for.</p>
+</div>
+
+<div class="keybox">
+  <div><span class="swatch" style="background:var(--p50)"></span><span><span class="k50">H₅₀</span> <span lang="zh">头条能力 · 50% 成功率</span><span lang="en">headline capability · 50% reliability</span></span></div>
+  <div><span class="swatch" style="background:var(--p80)"></span><span><span class="k80">H₈₀</span> <span lang="zh">可靠能力 · 80% 成功率</span><span lang="en">reliable capability · 80% reliability</span></span></div>
+</div>
+
+<!-- ============ PART I ============ -->
+<h2 id="p1"><span lang="zh">第一部分 — 这台仪器</span><span lang="en">Part I — The instrument</span></h2>
+
+<h3><span lang="zh">一个数据点是怎么产生的</span><span lang="en">How a single point is produced</span></h3>
+
+<div lang="zh">
+<p>这个构造方式与直觉相反。METR 并不是看着模型干活然后掐表,而是先给<strong>人类</strong>计时,再拟合一条曲线。</p>
+<ol>
+<li>从 RE-Bench、HCAST 和一组更短的新编软件任务里取题,主要是软件工程、机器学习和网络安全,全部自包含、成功判据可自动检验。</li>
+<li>雇佣熟练从业者(平均约 5 年经验)完成每个任务,取成功者完成时间的几何平均,记作该任务的<strong>人类时长</strong> <span class="mono">T</span>。</li>
+<li>让模型在同样环境下作答,<strong>每个任务 6 次独立尝试</strong>。</li>
+<li>以 <span class="mono">log T</span> 为自变量,对成功与否做 logistic 回归。</li>
+</ol>
+</div>
+<div lang="en">
+<p>The construction runs backwards from intuition. METR does not watch a model work and time it. They time <strong>humans</strong>, then fit a curve.</p>
+<ol>
+<li>Assemble tasks from RE-Bench, HCAST and a set of shorter novel software tasks — primarily software engineering, ML and cybersecurity, all self-contained with automatically checkable success criteria.</li>
+<li>Contract skilled professionals (averaging ~5 years of experience) to attempt each task. Take the geometric mean of successful completion times. This is the task's <strong>human duration</strong> <span class="mono">T</span>.</li>
+<li>Run the model in the same environment, <strong>six independent attempts per task</strong>.</li>
+<li>Fit a logistic regression of success against <span class="mono">log T</span>.</li>
+</ol>
+</div>
+
+<div class="tex">$$P(\text{success}\mid T)=\sigma\!\left(a+b\ln T\right),\qquad \sigma(z)=\frac{1}{1+e^{-z}},\qquad b<0$$</div>
+
+<div lang="zh"><p><strong>q-可靠性时间跨度</strong> <span class="mono">H_q</span> 是拟合曲线穿过 <span class="mono">q</span> 的那个时长:</p></div>
+<div lang="en"><p>The <strong>q-reliability time horizon</strong> <span class="mono">H_q</span> is the duration where the fitted curve crosses <span class="mono">q</span>:</p></div>
+
+<div class="tex">$$H_q=\exp\!\left(\frac{\operatorname{logit}(q)-a}{b}\right),\qquad \operatorname{logit}(q)=\ln\frac{q}{1-q}$$</div>
+
+<div lang="zh"><p>由于 <span class="mono">logit(0.5) = 0</span>,头条数字简化为 <span class="mono">H₅₀ = e^(−a/b)</span>。报告两个阈值:<span class="k50">H₅₀</span> 与 <span class="k80">H₈₀</span>。</p></div>
+<div lang="en"><p>Since <span class="mono">logit(0.5) = 0</span>, the headline number simplifies to <span class="mono">H₅₀ = e^(−a/b)</span>. Two thresholds get reported: <span class="k50">H₅₀</span> and <span class="k80">H₈₀</span>.</p></div>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 392" role="img" aria-label="Logistic success curve crossing the 80% and 50% thresholds, projected down to the time axis">
+  <line x1="96" y1="52" x2="96" y2="300" stroke="#D3D9DA" stroke-width="1"/>
+  <line x1="96" y1="300" x2="648" y2="300" stroke="#D3D9DA" stroke-width="1"/>
+
+  <line x1="96" y1="108" x2="352" y2="108" stroke="#B8761E" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="352" y1="108" x2="352" y2="300" stroke="#B8761E" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="96" y1="184" x2="462" y2="184" stroke="#7A5AA8" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="462" y1="184" x2="462" y2="300" stroke="#7A5AA8" stroke-width="1" stroke-dasharray="3 4"/>
+
+  <path class="draw" d="M102 62 C210 66,286 86,352 108 C412 130,434 158,462 184 C502 220,556 262,644 288" fill="none" stroke="#16242B" stroke-width="2.2" stroke-linecap="round"/>
+
+  <circle cx="352" cy="108" r="4.5" fill="#B8761E"/>
+  <circle cx="462" cy="184" r="4.5" fill="#7A5AA8"/>
+
+  <text x="86" y="56" text-anchor="end" fill="#7C8B92" font-size="12" dominant-baseline="central">100%</text>
+  <text x="86" y="108" text-anchor="end" fill="#B8761E" font-size="12" font-weight="500" dominant-baseline="central">80%</text>
+  <text x="86" y="184" text-anchor="end" fill="#7A5AA8" font-size="12" font-weight="500" dominant-baseline="central">50%</text>
+  <text x="86" y="300" text-anchor="end" fill="#7C8B92" font-size="12" dominant-baseline="central">0%</text>
+
+  <text x="140" y="320" text-anchor="middle" fill="#7C8B92" font-size="11.5">1 min</text>
+  <text x="240" y="320" text-anchor="middle" fill="#7C8B92" font-size="11.5">10 min</text>
+  <text x="352" y="320" text-anchor="middle" fill="#7C8B92" font-size="11.5">1 h</text>
+  <text x="462" y="320" text-anchor="middle" fill="#7C8B92" font-size="11.5">4 h</text>
+  <text x="572" y="320" text-anchor="middle" fill="#7C8B92" font-size="11.5">12 h</text>
+
+  <text x="352" y="345" text-anchor="middle" fill="#B8761E" font-size="12.5" font-weight="500">H₈₀</text>
+  <text x="462" y="345" text-anchor="middle" fill="#7A5AA8" font-size="12.5" font-weight="500">H₅₀</text>
+
+  <text lang="zh" x="372" y="374" text-anchor="middle" fill="#7C8B92" font-size="12">人类专家完成该任务所需时长(对数轴)</text>
+  <text lang="en" x="372" y="374" text-anchor="middle" fill="#7C8B92" font-size="12">Human expert completion time for the task (log scale)</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 1 — 时间跨度的推导。每个模型在趋势图上的一个点,就是这样一条曲线与阈值线的交点投影到横轴的结果。</span><span lang="en">Fig. 1 — How a horizon is derived. Each point on the trend chart is this curve's crossing, projected onto the time axis.</span></figcaption>
+</figure>
+
+<h3><span lang="zh">三种误读</span><span lang="en">Three misreadings</span></h3>
+
+<div class="note">
+<span class="tag"><span lang="zh">误读一</span><span lang="en">Misreading 1</span></span>
+<div lang="zh"><p><strong>它不是模型能无人值守运行多久。</strong>METR 明确说明:这个指标描述的是<em>任务难度</em>,不是 AI 的墙钟时间。成功的模型通常比人类快几倍,因为动作更少——常常一次写对而不用反复迭代,查的东西也更少。</p></div>
+<div lang="en"><p><strong>It is not how long a model runs unattended.</strong> METR states this directly: the metric describes <em>task difficulty</em>, not AI wall-clock time. Models that succeed are typically several times faster than the humans, because they take fewer actions — often writing code in one shot rather than iterating, and looking up less.</p></div>
+</div>
+
+<div class="note">
+<span class="tag"><span lang="zh">误读二</span><span lang="en">Misreading 2</span></span>
+<div lang="zh"><p><strong>它不是"熟练老手的 T 小时"。</strong>METR 的任务被设计为自包含。真实工作依赖先前对话、隐性知识和对代码库的熟悉。他们自己的指引是:把两小时任务理解成一个<strong>低背景的人</strong>——新入职或外包——能在两小时内做完的事。在一个耦合未文档化的成熟系统里,这两者差距很大。</p></div>
+<div lang="en"><p><strong>It is not "what an experienced engineer does in T hours."</strong> METR's tasks are self-contained by design. Real work draws on prior conversations, tacit knowledge and codebase familiarity. Their own guidance: read a two-hour task as what a <strong>low-context person</strong> — a new hire or a freelance contractor — could do in two hours. In a mature system with undocumented coupling, that gap is large.</p></div>
+</div>
+
+<div class="note">
+<span class="tag"><span lang="zh">误读三</span><span lang="en">Misreading 3</span></span>
+<div lang="zh"><p><strong>它不是"低于这个时长的任务都能做"。</strong>METR 给了具体分解:GPT-5 智能体在人类耗时 90 分钟到 3 小时的任务上,约三分之一每次都成功,约三分之一每次都失败,其余时对时错。<span class="k50">H₅₀</span> 是一个难度带上的聚合值,不是每个任务的抛硬币。</p></div>
+<div lang="en"><p><strong>It is not a threshold below which everything works.</strong> METR gives a breakdown: for a GPT-5 agent on tasks in the 90-minute-to-3-hour band, about a third succeed every time, about a third fail every time, and the rest are mixed. <span class="k50">H₅₀</span> is an aggregate over a difficulty band, not a per-task coin flip.</p></div>
+</div>
+
+<!-- ============ PART II ============ -->
+<h2 id="p2"><span lang="zh">第二部分 — 曲线说了什么</span><span lang="en">Part II — What the curve says</span></h2>
+
+<h3><span lang="zh">两条线,以及它们之间那个常数</span><span lang="en">The two lines, and the constant between them</span></h3>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 352" role="img" aria-label="Time series of 50 percent and 80 percent time horizons from 2023 to 2026 on a logarithmic scale, showing a persistent gap">
+  <line x1="70" y1="293" x2="660" y2="293" stroke="#E4E8E9" stroke-width="1"/>
+  <line x1="70" y1="216" x2="660" y2="216" stroke="#E4E8E9" stroke-width="1"/>
+  <line x1="70" y1="140" x2="660" y2="140" stroke="#E4E8E9" stroke-width="1"/>
+  <line x1="70" y1="63" x2="660" y2="63" stroke="#E4E8E9" stroke-width="1"/>
+  <text x="62" y="293" text-anchor="end" fill="#7C8B92" font-size="11" dominant-baseline="central">0.01 h</text>
+  <text x="62" y="216" text-anchor="end" fill="#7C8B92" font-size="11" dominant-baseline="central">0.1 h</text>
+  <text x="62" y="140" text-anchor="end" fill="#7C8B92" font-size="11" dominant-baseline="central">1 h</text>
+  <text x="62" y="63" text-anchor="end" fill="#7C8B92" font-size="11" dominant-baseline="central">10 h</text>
+
+  <line x1="70" y1="40" x2="70" y2="310" stroke="#D3D9DA" stroke-width="1"/>
+  <text x="70" y="328" text-anchor="middle" fill="#7C8B92" font-size="11.5">2023</text>
+  <text x="239" y="328" text-anchor="middle" fill="#7C8B92" font-size="11.5">2024</text>
+  <text x="407" y="328" text-anchor="middle" fill="#7C8B92" font-size="11.5">2025</text>
+  <text x="576" y="328" text-anchor="middle" fill="#7C8B92" font-size="11.5">2026</text>
+
+  <polyline points="98,229 309,195 393,154 421,139 505,99 548,87 562,81 590,57 618,45" fill="none" stroke="#7A5AA8" stroke-width="2" stroke-linejoin="round"/>
+  <polyline points="98,294 309,258 393,210 421,193 505,154 548,146 562,136 590,135 618,102" fill="none" stroke="#B8761E" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 4"/>
+
+  <g fill="#7A5AA8"><circle cx="98" cy="229" r="3"/><circle cx="309" cy="195" r="3"/><circle cx="393" cy="154" r="3"/><circle cx="421" cy="139" r="3"/><circle cx="505" cy="99" r="3"/><circle cx="548" cy="87" r="3"/><circle cx="562" cy="81" r="3"/><circle cx="590" cy="57" r="3"/><circle cx="618" cy="45" r="3.6"/></g>
+  <g fill="#B8761E"><circle cx="98" cy="294" r="3"/><circle cx="309" cy="258" r="3"/><circle cx="393" cy="210" r="3"/><circle cx="421" cy="193" r="3"/><circle cx="505" cy="154" r="3"/><circle cx="548" cy="146" r="3"/><circle cx="562" cy="136" r="3"/><circle cx="590" cy="135" r="3"/><circle cx="618" cy="102" r="3.6"/></g>
+
+  <line x1="640" y1="45" x2="640" y2="102" stroke="#16242B" stroke-width="1"/>
+  <line x1="636" y1="45" x2="644" y2="45" stroke="#16242B" stroke-width="1"/>
+  <line x1="636" y1="102" x2="644" y2="102" stroke="#16242B" stroke-width="1"/>
+  <text x="652" y="76" fill="#16242B" font-size="11.5" font-weight="500" dominant-baseline="central">5.6×</text>
+
+  <text x="98" y="248" text-anchor="middle" fill="#7C8B92" font-size="10.5">GPT-4</text>
+  <text x="421" y="128" text-anchor="middle" fill="#7C8B92" font-size="10.5">3.7 Sonnet</text>
+  <text x="505" y="88" text-anchor="middle" fill="#7C8B92" font-size="10.5">GPT-5</text>
+  <text x="600" y="33" text-anchor="middle" fill="#7C8B92" font-size="10.5">Mythos Prev.</text>
+
+  <text x="120" y="50" fill="#7A5AA8" font-size="12.5" font-weight="500">H₅₀</text>
+  <text x="120" y="68" fill="#B8761E" font-size="12.5" font-weight="500">H₈₀</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 2 — 两条线在对数轴上近似为直线,即指数增长。两者的比值三年来稳定在约 5.5 倍。</span><span lang="en">Fig. 2 — Both lines are near-straight on a log axis: exponential growth. The ratio between them has stayed near 5.5× for three years.</span></figcaption>
+</figure>
+
+<div class="tw">
+<table>
+<caption><span lang="zh">表 1 — Time Horizon 1.1 实测值</span><span lang="en">Table 1 — Time Horizon 1.1 measurements</span></caption>
+<thead><tr>
+<th><span lang="zh">模型</span><span lang="en">Model</span></th>
+<th class="n"><span lang="zh">发布</span><span lang="en">Release</span></th>
+<th class="n">H₅₀</th><th class="n">H₈₀</th>
+<th class="n"><span lang="zh">比值</span><span lang="en">Ratio</span></th>
+</tr></thead>
+<tbody>
+<tr><td>GPT-4</td><td class="n">2023-03</td><td class="n c50">4 min</td><td class="n c80">0.6 min</td><td class="n">7.0×</td></tr>
+<tr><td>Claude 3.5 Sonnet</td><td class="n">2024-06</td><td class="n c50">11 min</td><td class="n c80">2 min</td><td class="n">6.3×</td></tr>
+<tr><td>o1</td><td class="n">2024-12</td><td class="n c50">39 min</td><td class="n c80">7 min</td><td class="n">5.4×</td></tr>
+<tr><td>Claude 3.7 Sonnet</td><td class="n">2025-02</td><td class="n c50">1.0 h</td><td class="n c80">0.20 h</td><td class="n">5.1×</td></tr>
+<tr><td>o3</td><td class="n">2025-04</td><td class="n c50">2.0 h</td><td class="n c80">0.50 h</td><td class="n">4.0×</td></tr>
+<tr><td>GPT-5</td><td class="n">2025-08</td><td class="n c50">3.4 h</td><td class="n c80">0.64 h</td><td class="n">5.3×</td></tr>
+<tr><td>Gemini 3 Pro</td><td class="n">2025-11</td><td class="n c50">3.7 h</td><td class="n c80">0.90 h</td><td class="n">4.2×</td></tr>
+<tr><td>Claude Opus 4.5</td><td class="n">2025-11</td><td class="n c50">4.9 h</td><td class="n c80">0.82 h</td><td class="n">6.0×</td></tr>
+<tr><td>GPT-5.2</td><td class="n">2025-12</td><td class="n c50">5.9 h</td><td class="n c80">1.10 h</td><td class="n">5.3×</td></tr>
+<tr><td>Claude Opus 4.6</td><td class="n">2026-02</td><td class="n c50">12.0 h</td><td class="n c80">1.16 h</td><td class="n">10.3×</td></tr>
+<tr><td>Gemini 3.1 Pro</td><td class="n">2026-02</td><td class="n c50">6.4 h</td><td class="n c80">1.50 h</td><td class="n">4.3×</td></tr>
+<tr><td>Claude Mythos Preview</td><td class="n">2026-04</td><td class="n c50">17.4 h</td><td class="n c80">3.10 h</td><td class="n">5.6×</td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh"><p>比值 <span class="mono">r = H₅₀/H₈₀</span> 三年来稳定在 5.5 左右。(Opus 4.6 的 10.3× 是离群值,其置信区间跨越 <span class="mono">[5.3, 60.6]</span> 小时——饱和端的噪声。)从 logistic 形式看,这个恒定性是关于斜率 <span class="mono">b</span> 的陈述:</p></div>
+<div lang="en"><p>The ratio <span class="mono">r = H₅₀/H₈₀</span> has stayed near 5.5 for three years. (Opus 4.6's 10.3× is an outlier whose confidence interval spans <span class="mono">[5.3, 60.6]</span> hours — noise at the saturated end.) From the logistic form, that constancy is a statement about the slope <span class="mono">b</span>:</p></div>
+
+<div class="tex">$$\frac{H_{50}}{H_{80}}=\exp\!\left(\frac{-\operatorname{logit}(0.8)}{b}\right)=\exp\!\left(\frac{-1.386}{b}\right)\;\Longrightarrow\;b\approx-0.813$$</div>
+
+<div lang="zh"><p>成功曲线并没有变<em>陡</em>,它只是整体右移了。这给出了整份数据里最有用的一个衍生量。若跨度每 <span class="mono">T₂</span> 天翻倍:</p></div>
+<div lang="en"><p>The success curve has not gotten <em>steeper</em>; it has slid right. This yields the most useful derived quantity in the dataset. If horizons double every <span class="mono">T₂</span> days:</p></div>
+
+<div class="tex">$$\Delta t = T_2\cdot\log_2 r = 125\times\log_2 5.5 \approx 307\ \text{days}$$</div>
+
+<div class="pull">
+<p lang="zh"><strong>可靠能力落后头条能力约十个月。</strong>今天的 <span class="k50">H₅₀</span> 就是明年的 <span class="k80">H₈₀</span>。</p>
+<p lang="en"><strong>Reliable capability lags headline capability by roughly ten months.</strong> Today's <span class="k50">H₅₀</span> is next year's <span class="k80">H₈₀</span>.</p>
+</div>
+
+<div lang="zh"><p>这一点之所以重要,是因为自主性需要的是可靠性而非中位表现。一个十二小时任务在 50% 成功率下的实际含义是:跑两遍,<em>并且要有能力判断哪一遍是对的</em>。第二个要求才是昂贵的那个,它是第五部分全部内容的种子。</p></div>
+<div lang="en"><p>This matters because autonomy needs reliability, not median performance. A twelve-hour task at 50% means running it twice <em>and having the ability to tell which run was right</em>. That second requirement is the expensive one, and it is the seed of everything in Part V.</p></div>
+
+<h3><span lang="zh">基准在饱和,而且部分在说谎</span><span lang="en">Benchmarks are saturating, and partly lying</span></h3>
+
+<div lang="zh"><p>SWE-bench Verified 作为前沿信号已经结束。2026 年 9 月,前三名分别是 96%、95.5%、95%,挤在一个百分点内。但这些分数从来没有看上去那么有信息量:</p></div>
+<div lang="en"><p>SWE-bench Verified is finished as a frontier signal. As of September 2026 the leaders sit at 96%, 95.5% and 95%, clustered within a point. But the scores were never as informative as they looked:</p></div>
+
+<div class="tw">
+<table>
+<thead><tr><th><span lang="zh">模型</span><span lang="en">Model</span></th><th class="n">SWE-bench Verified</th><th class="n">SWE-bench Pro</th><th class="n"><span lang="zh">落差</span><span lang="en">Drop</span></th></tr></thead>
+<tbody>
+<tr><td>Claude Opus 4.5</td><td class="n">80.9%</td><td class="n">45.9%</td><td class="n" style="color:var(--p80)">−35.0</td></tr>
+<tr><td>GPT-5 High</td><td class="n">~55%</td><td class="n">23.3%</td><td class="n" style="color:var(--p80)">−31.7</td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh">
+<p>Pro 使用标准化脚手架,任务是模型训练时不可能见过的。还有数据质量问题:OpenAI 自己的审计发现,<strong>Verified 中最难的未解决问题有 59.4% 存在测试用例缺陷</strong>。OpenAI 已于 2026 年初停止报告 Verified 分数并转向 Pro。独立对抗性工作(SWE-ABS)在补强测试套件后,各模型普遍下降 15 到 18 个百分点。</p>
+<p>教训不是模型弱,而是:<strong>任何成功判据可算法检验的基准都会被优化针对,而"测试通过"与"问题解决"之间的残差,恰好是你在生产环境中继承的那部分。</strong>METR 自己的流程里有专门的 reward hacking 检查——自动标记加多人复核——这说明这种背离有多常规。</p>
+</div>
+<div lang="en">
+<p>Pro uses standardized scaffolding on tasks the models could not have seen in training. There is a data-quality problem too: an OpenAI audit found <strong>59.4% of the hardest unsolved Verified problems had flawed test cases</strong>. OpenAI stopped reporting Verified in early 2026 and now points to Pro. Independent adversarial work (SWE-ABS) strengthens the test suites and finds uniform 15–18 point drops.</p>
+<p>The lesson is not that the models are weak. It is that <strong>any benchmark with algorithmically checkable success gets optimized against, and the residual gap between "passes the tests" and "solved the problem" is exactly what you inherit in production.</strong> METR's own pipeline includes a dedicated reward-hacking check — automated flagging plus multiple human reviewers — which tells you how routine that divergence is.</p>
+</div>
+
+<h3><span lang="zh">趋势变陡了,而且原因清楚</span><span lang="en">The trend steepened, and we know why</span></h3>
+
+<div lang="zh"><p>用 2019 年起的全部数据拟合:倍增周期约 <strong>188 天</strong>。只用 2023 年以后的数据:约 <strong>125 天</strong>。七个月压缩到四个月出头。</p></div>
+<div lang="en"><p>Fitting METR's full history from 2019: doubling every <strong>~188 days</strong>. Fitting 2023 onward: doubling every <strong>~125 days</strong>. Seven months compressed to four.</p></div>
+
+<div class="tw">
+<table>
+<thead><tr><th><span lang="zh">指标</span><span lang="en">Metric</span></th><th class="n"><span lang="zh">增速</span><span lang="en">Growth</span></th><th class="n"><span lang="zh">倍增周期</span><span lang="en">Doubling</span></th></tr></thead>
+<tbody>
+<tr><td><span lang="zh">METR 时间跨度(2023 起)</span><span lang="en">METR time horizon (2023→)</span></td><td class="n">—</td><td class="n">~125 <span lang="zh">天</span><span lang="en">days</span></td></tr>
+<tr><td><span lang="zh">前沿训练算力(2020 起)</span><span lang="en">Frontier training compute (2020→)</span></td><td class="n">5×/yr</td><td class="n">5.2 <span lang="zh">月</span><span lang="en">mo</span></td></tr>
+<tr><td><span lang="zh">全球 AI 芯片存量(2022 起)</span><span lang="en">Global AI chip stock (2022→)</span></td><td class="n">3.3×/yr</td><td class="n">~7 <span lang="zh">月</span><span lang="en">mo</span></td></tr>
+<tr><td><span lang="zh">上下文窗口(2023 起)</span><span lang="en">Context windows (2023→)</span></td><td class="n">30×/yr</td><td class="n">2.4 <span lang="zh">月</span><span lang="en">mo</span></td></tr>
+<tr><td><span lang="zh">芯片性价比(2023 起)</span><span lang="en">Chip performance per dollar (2023→)</span></td><td class="n">+49%/yr</td><td class="n">1.7 <span lang="zh">年</span><span lang="en">yr</span></td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh">
+<p>拐点是推理模型。自 2024 年 9 月 o1-preview 出现以来,Epoch 的能力指数以每年约 <strong>14 点</strong>推进,而此前非推理模型是每年约 <strong>6 点</strong>——2.3 倍加速。</p>
+<p>机制很直接:2024 年末之前基本只有预训练这一条扩展轴;推理模型打开了第二条——推理时计算,加上<strong>在可验证任务上做强化学习</strong>。请记住这个短语。它会在第五部分作为核心工程杠杆回来,在第六部分作为经济杠杆回来。</p>
+</div>
+<div lang="en">
+<p>The inflection is reasoning models. Epoch's capabilities index has advanced at ~<strong>14 points/year</strong> since o1-preview appeared in September 2024, against ~<strong>6 points/year</strong> before — a 2.3× acceleration.</p>
+<p>The mechanism: before late 2024 there was essentially one scaling axis, pre-training. Reasoning models opened a second — inference-time compute plus <strong>reinforcement learning on verifiable tasks</strong>. Note that phrase. It returns in Part V as the central engineering lever, and in Part VI as an economic one.</p>
+</div>
+
+<!-- ============ PART III ============ -->
+<h2 id="p3"><span lang="zh">第三部分 — 曲线往哪走</span><span lang="en">Part III — Where the curve goes</span></h2>
+
+<h3><span lang="zh">直接外推会爆炸</span><span lang="en">Naive extrapolation detonates</span></h3>
+
+<div class="tw">
+<table>
+<thead><tr><th><span lang="zh">时间</span><span lang="en">Date</span></th><th class="n"><span lang="zh">外推 H₅₀</span><span lang="en">Projected H₅₀</span></th><th><span lang="zh">相当于</span><span lang="en">Equivalent to</span></th></tr></thead>
+<tbody>
+<tr><td>2026 <span lang="zh">末</span><span lang="en">late</span></td><td class="n c50">28 h</td><td><span lang="zh">半周工作</span><span lang="en">half a work-week</span></td></tr>
+<tr><td>2027 <span lang="zh">中</span><span lang="en">mid</span></td><td class="n c50">107 h</td><td><span lang="zh">近三周</span><span lang="en">nearly three weeks</span></td></tr>
+<tr><td>2028 <span lang="zh">中</span><span lang="en">mid</span></td><td class="n c50">817 h</td><td><span lang="zh">二十人周</span><span lang="en">twenty person-weeks</span></td></tr>
+<tr><td>2030 <span lang="zh">中</span><span lang="en">mid</span></td><td class="n c50">47,000 h</td><td><span lang="zh">二十五人年</span><span lang="en">twenty-five person-years</span></td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh">
+<p>二十五人年的东西不是一个"任务",而是一个部门干几年的产出。<strong>这个指标在能力抵达之前就先失去了意义。</strong></p>
+<p>METR 已经标出了边界:超过 16 小时的测量在当前任务集上不可靠,趋势拟合明确排除了中心估计超过该值的点。他们最长的任务约八小时,右尾之下没有数据。置信区间显示了破坏程度:Opus 4.6 是 <span class="mono">[5.3, 60.6]</span> 小时,Mythos Preview 是 <span class="mono">[8.5, 55.1]</span> 小时,跨度超过一个数量级。</p>
+</div>
+<div lang="en">
+<p>Twenty-five person-years is not a "task"; it is a department's multi-year output. <strong>The metric loses meaning before the capability arrives.</strong></p>
+<p>METR already flags the boundary: measurements above 16 hours are unreliable with the current suite, and the trend fit excludes points whose central estimate exceeds it. Their longest tasks run to about eight hours, so the right tail has no data beneath it. The confidence intervals show the damage — Opus 4.6 at <span class="mono">[5.3, 60.6]</span> h, Mythos Preview at <span class="mono">[8.5, 55.1]</span> h. Spans over an order of magnitude.</p>
+</div>
+
+<h3><span lang="zh">一个有原理的下限</span><span lang="en">A principled floor</span></h3>
+
+<div lang="zh"><p>Whitfill、Snodin 与 Becker(其中一位在 METR)建立了让下限可计算的模型。两个假设:</p></div>
+<div lang="en"><p>Whitfill, Snodin and Becker (one of them at METR) built the model that makes a lower bound tractable. Two assumptions:</p></div>
+
+<div class="tex">$$Y=F(AC),\qquad \frac{dA}{dt}\propto A^{1-\beta}E^{\lambda},\qquad \lambda,\beta>0$$</div>
+
+<div lang="zh"><p>其中 <span class="mono">Y</span> 是时间跨度,<span class="mono">C</span> 训练算力,<span class="mono">E</span> 实验算力,<span class="mono">A</span> 算法乘子。第二个假设以实验算力为算法进步的唯一输入,<strong>明确排除了纯软件的智能爆炸</strong>——劳动力不是约束项。对 <span class="mono">Y</span> 取对数微分并代入稳态关系,得到主方程:</p></div>
+<div lang="en"><p>where <span class="mono">Y</span> is time horizon, <span class="mono">C</span> training compute, <span class="mono">E</span> experimental compute, <span class="mono">A</span> an algorithmic multiplier. The second assumption makes experimental compute the sole input to algorithmic progress, which <strong>explicitly rules out a software-only intelligence explosion</strong> — labour is not the binding input. Log-differentiating and substituting the steady state gives the main equation:</p></div>
+
+<div class="boxed"><div class="tex">$$\frac{d\log Y}{dt}=\underbrace{\left.\frac{\partial\log Y}{\partial\log C}\right|_A\!\left(1+\frac{\lambda}{\beta}\right)}_{c}\cdot\frac{d\log(E+C)}{dt}$$</div></div>
+
+<div lang="zh">
+<p>两个经验事实——跨度与算力自 2019 年起均以恒定速率增长——迫使 <span class="mono">∂logY/∂logC|_A</span> 为常数,而这当且仅当 <span class="mono">F</span> 是幂律函数时成立。他们在 Llama 3.1 与 Qwen 2.5 上的跨族检验支持这一点,经算力最优性调整后共享斜率 <span class="mono">R² = 0.949</span>。</p>
+<p>拟合参数:<span class="mono">∂logY/∂logC|_A ≈ 0.454</span>,<span class="mono">λ/β ≈ 0.95</span>,故 <span class="mono">c ≈ 0.885</span>。<strong>跨度增速与研发算力增速几乎一比一。</strong>同一框架反推出的算法进步率约为每年 3.5 倍,与 Ho 等人的独立估计吻合。</p>
+</div>
+<div lang="en">
+<p>The two empirical facts — that horizon and compute have both grown at constant rates since 2019 — force <span class="mono">∂logY/∂logC|_A</span> to be constant, which holds if and only if <span class="mono">F</span> is a power law. Their cross-family test on Llama 3.1 and Qwen 2.5 supports this, with shared-slope <span class="mono">R² = 0.949</span> after adjusting for compute-optimality.</p>
+<p>Fitted: <span class="mono">∂logY/∂logC|_A ≈ 0.454</span>, <span class="mono">λ/β ≈ 0.95</span>, hence <span class="mono">c ≈ 0.885</span>. <strong>Horizon growth is very nearly one-to-one with R&amp;D compute growth.</strong> The same framework backs out algorithmic progress at ≈3.5× per year, matching Ho et al.'s independent estimate.</p>
+</div>
+
+<h3><span lang="zh">最坏情况</span><span lang="en">The worst case</span></h3>
+
+<div lang="zh"><p>假设最严苛的合理情景:<strong>AI 研发支出的实际金额从今天起停止增长。</strong>算力仍会增长,因为性价比在改进。设年度有效算力增长因子为 <span class="mono">g</span>:</p></div>
+<div lang="en"><p>Assume the harshest plausible scenario: <strong>real AI R&amp;D spending stops growing today.</strong> Compute still grows, because performance per dollar improves. With annual effective-compute growth factor <span class="mono">g</span>:</p></div>
+
+<div class="tex">$$T_2=\frac{\ln 2}{c\cdot\ln g}$$</div>
+
+<div class="tw">
+<table>
+<thead><tr><th><span lang="zh">性价比增速</span><span lang="en">Perf/$ growth</span></th><th class="n">g</th><th class="n"><span lang="zh">跨度年增速</span><span lang="en">Horizon growth</span></th><th class="n">T₂</th></tr></thead>
+<tbody>
+<tr><td>+49%/yr <span lang="zh">(历史值)</span><span lang="en">(historical)</span></td><td class="n">1.49</td><td class="n">1.42×/yr</td><td class="n"><strong>~24 <span lang="zh">月</span><span lang="en">mo</span></strong></td></tr>
+<tr><td>+40%/yr</td><td class="n">1.40</td><td class="n">1.35×/yr</td><td class="n">~28 <span lang="zh">月</span><span lang="en">mo</span></td></tr>
+<tr><td>+30%/yr</td><td class="n">1.30</td><td class="n">1.26×/yr</td><td class="n">~36 <span lang="zh">月</span><span lang="en">mo</span></td></tr>
+</tbody></table>
+</div>
+
+<div class="pull">
+<p lang="zh"><strong>高置信度下限:<span class="k80">H₈₀</span> 每两到三年翻一倍。</strong></p>
+<p lang="en"><strong>High-confidence floor: <span class="k80">H₈₀</span> doubles every two to three years.</strong></p>
+</div>
+
+<div class="tw">
+<table>
+<caption><span lang="zh">表 2 — 下限路径,以当前 H₈₀ ≈ 4 小时为锚,T₂ = 2.3 年</span><span lang="en">Table 2 — Floor path, anchored at H₈₀ ≈ 4 h today, T₂ = 2.3 yr</span></caption>
+<thead><tr><th><span lang="zh">年份</span><span lang="en">Year</span></th><th class="n">2027</th><th class="n">2028</th><th class="n">2029</th><th class="n">2030</th><th class="n">2033</th></tr></thead>
+<tbody><tr><td><span lang="zh">下限 H₈₀</span><span lang="en">Floor H₈₀</span></td><td class="n c80">~5 h</td><td class="n c80">~7 h</td><td class="n c80">~9 h</td><td class="n c80">~12 h</td><td class="n c80">~26 h</td></tr></tbody>
+</table>
+</div>
+
+<div lang="zh">
+<p>三个理由说明这个下限偏保守,全部指向同一方向:</p>
+<ol>
+<li>它假设放缓从今天开始,但 2027–2028 年的算力基本已是既成事实——数据中心在建、芯片订单已下。而且前沿实验室在 2025 年<strong>只用掉了全球 AI 算力的 20–30%</strong>,在受制于总产能之前还有腾挪空间。现实路径是先按现速跑一两年,再落到这个斜率,这会把 2030 年推到 25–50 小时。</li>
+<li>论文的主结果本身是<strong>延迟的下限</strong>。他们的凹性检验(<span class="mono">∂logY/∂logC|_A = βC^ρ</span>,<span class="mono">ρ &lt; 0</span>)显著拉长延迟——一周跨度从推迟两年变成推迟七年。</li>
+<li>未假设范式转变。2023 年没有人预测到推理模型会把倍增周期减半。</li>
+</ol>
+<p>关于放缓的代价有个参照:把 OpenAI 自己的算力预测代入该模型,<strong>"一个月跨度、80% 可靠性"会比朴素外推晚约七年到来。</strong></p>
+</div>
+<div lang="en">
+<p>Three reasons this floor is conservative, all pointing the same way:</p>
+<ol>
+<li>It assumes the slowdown starts now, but 2027–2028 compute is largely pre-committed — datacenters under construction, chips ordered. And frontier labs used only <strong>20–30% of global AI compute in 2025</strong>, so there is headroom before they are bound by total production. Realistically: current speed for a year or two, <em>then</em> this slope. That puts 2030 nearer 25–50 h.</li>
+<li>The paper's main result is a <strong>lower bound on delay</strong>. Their concavity check (<span class="mono">∂logY/∂logC|_A = βC^ρ</span>, <span class="mono">ρ &lt; 0</span>) lengthens delays substantially — a one-week horizon slips seven years instead of two.</li>
+<li>No paradigm shift is assumed. Nobody predicted in 2023 that reasoning models would halve the doubling time.</li>
+</ol>
+<p>For scale on what slowdown costs: feeding OpenAI's own compute projections through the model, <strong>a one-month horizon at 80% reliability arrives about seven years later than naive extrapolation implies.</strong></p>
+</div>
+
+<!-- ============ PART IV ============ -->
+<h2 id="p4"><span lang="zh">第四部分 — 曲线看不见什么</span><span lang="en">Part IV — What the curve cannot see</span></h2>
+
+<h3><span lang="zh">任务不是项目</span><span lang="en">Tasks are not projects</span></h3>
+
+<div lang="zh">
+<p>METR 把任务定义为<strong>不可被轻易拆分</strong>的连贯单元。他们的例子:一千道各需一小时的独立数学题不是一千小时任务,而是一小时任务做一千遍——因为可以并行分给一千个人或一千次模型调用。</p>
+<p>所以 Chromium(约 3000 万行,COCOMO 估算约一万人年)<strong>不是</strong>一个两千万小时的任务。真正决定它的是:(a) 其中最长的<strong>不可约</strong>子任务有多长;(b) 有没有东西能做分解与整合。第二项至今没有任何基准覆盖。</p>
+<p>METR 对"真正的长任务"的原型描述是关键:<em>迭代调试一个复杂系统,每次修复揭示新问题,而新问题只有在你知道之前试过什么的前提下才说得通。</em>不可约性正是这个——真正重要的状态是累积的失败假设记录,而这种状态无法跨越接口传递。</p>
+</div>
+<div lang="en">
+<p>METR defines a task as a coherent unit that <strong>cannot be trivially split</strong>. Their illustration: a thousand separate one-hour maths problems is not a thousand-hour task, it is a one-hour task done a thousand times, because you can parallelize it across a thousand people or a thousand model calls.</p>
+<p>So Chromium — roughly 30M lines, ~10,000 person-years by COCOMO — is <strong>not</strong> a 20-million-hour task. What governs it is (a) the length of its longest <strong>irreducible</strong> sub-task, and (b) whether anything can perform decomposition and integration. The second has essentially no benchmark coverage at all.</p>
+<p>METR's prototype of a genuinely long task is the key: <em>iteratively debugging a complex system, where each fix reveals new problems that only make sense if you know what you already tried.</em> Irreducibility is precisely this — the state that matters is the accumulated record of failed hypotheses, and that state cannot cross an interface.</p>
+</div>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 400" role="img" aria-label="Decision tree for classifying sub-tasks as irreducible or parallelizable">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round"/></marker></defs>
+
+  <rect x="255" y="20" width="190" height="40" fill="#FFFFFF" stroke="#16242B" stroke-width="1"/>
+  <text lang="zh" x="350" y="40" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">子任务 A 与 B</text>
+  <text lang="en" x="350" y="40" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">Sub-tasks A and B</text>
+
+  <line x1="350" y1="60" x2="350" y2="88" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar)"/>
+
+  <rect x="182" y="90" width="336" height="52" fill="#EFF1F2" stroke="#16242B" stroke-width="1" stroke-dasharray="4 3"/>
+  <text lang="zh" x="350" y="116" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">B 需不需要知道 A 试过什么、为什么失败?</text>
+  <text lang="en" x="350" y="116" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">Does B need A's failed-attempt history?</text>
+
+  <path d="M280 142 L280 176 L200 176 L200 198" fill="none" stroke="#B8761E" stroke-width="1.2" marker-end="url(#ar)"/>
+  <path d="M420 142 L420 176 L500 176 L500 198" fill="none" stroke="#7A5AA8" stroke-width="1.2" marker-end="url(#ar)"/>
+  <text lang="zh" x="243" y="167" text-anchor="middle" font-size="12" fill="#B8761E">需要</text>
+  <text lang="en" x="243" y="167" text-anchor="middle" font-size="12" fill="#B8761E">Yes</text>
+  <text lang="zh" x="460" y="167" text-anchor="middle" font-size="12" fill="#7A5AA8">不需要</text>
+  <text lang="en" x="460" y="167" text-anchor="middle" font-size="12" fill="#7A5AA8">No</text>
+
+  <rect x="76" y="200" width="248" height="52" fill="#F9EFDF" stroke="#B8761E" stroke-width="1"/>
+  <text lang="zh" x="200" y="217" text-anchor="middle" font-size="13.5" font-weight="500" fill="#7A4A0F" dominant-baseline="central">不可约</text>
+  <text lang="en" x="200" y="217" text-anchor="middle" font-size="13.5" font-weight="500" fill="#7A4A0F" dominant-baseline="central">Irreducible</text>
+  <text lang="zh" x="200" y="236" text-anchor="middle" font-size="11.5" fill="#8A5A18" dominant-baseline="central">是一个任务,不是两个</text>
+  <text lang="en" x="200" y="236" text-anchor="middle" font-size="11.5" fill="#8A5A18" dominant-baseline="central">one task, not two</text>
+
+  <rect x="376" y="200" width="248" height="52" fill="#F0EBF7" stroke="#7A5AA8" stroke-width="1"/>
+  <text lang="zh" x="500" y="217" text-anchor="middle" font-size="13.5" font-weight="500" fill="#4E3670" dominant-baseline="central">可并行</text>
+  <text lang="en" x="500" y="217" text-anchor="middle" font-size="13.5" font-weight="500" fill="#4E3670" dominant-baseline="central">Parallelizable</text>
+  <text lang="zh" x="500" y="236" text-anchor="middle" font-size="11.5" fill="#5D4485" dominant-baseline="central">交接物是契约或输出</text>
+  <text lang="en" x="500" y="236" text-anchor="middle" font-size="11.5" fill="#5D4485" dominant-baseline="central">handoff is a contract or output</text>
+
+  <line x1="200" y1="252" x2="200" y2="282" stroke="#B8761E" stroke-width="1.2" marker-end="url(#ar)"/>
+  <line x1="500" y1="252" x2="500" y2="282" stroke="#7A5AA8" stroke-width="1.2" marker-end="url(#ar)"/>
+
+  <rect x="76" y="284" width="248" height="76" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <text lang="zh" x="200" y="303" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">串行执行</text>
+  <text lang="en" x="200" y="303" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Serialize</text>
+  <text lang="zh" x="200" y="322" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">密集检查点</text>
+  <text lang="en" x="200" y="322" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Dense checkpoints</text>
+  <text x="200" y="342" text-anchor="middle" font-size="12" fill="#B8761E" font-weight="500" dominant-baseline="central">受 H₈₀ 约束 / bounded by H₈₀</text>
+
+  <rect x="376" y="284" width="248" height="76" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <text lang="zh" x="500" y="303" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">并行执行</text>
+  <text lang="en" x="500" y="303" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Parallelize</text>
+  <text lang="zh" x="500" y="322" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">冻结契约</text>
+  <text lang="en" x="500" y="322" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Frozen contract</text>
+  <text lang="zh" x="500" y="342" text-anchor="middle" font-size="12" fill="#7A5AA8" font-weight="500" dominant-baseline="central">受集成成本约束</text>
+  <text lang="en" x="500" y="342" text-anchor="middle" font-size="12" fill="#7A5AA8" font-weight="500" dominant-baseline="central">bounded by integration cost</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 3 — 可分性判别。这是整套方法论里唯一需要判断力的一步,后面都是机械的。</span><span lang="en">Fig. 3 — The decomposition test. This is the only step in the methodology requiring judgement; everything after it is mechanical.</span></figcaption>
+</figure>
+
+<div class="pull">
+<p lang="zh"><strong>搜索形态的工作不可分解。构造形态的工作几乎总是可以。</strong></p>
+<p lang="en"><strong>Search-shaped work does not decompose. Construction-shaped work almost always does.</strong></p>
+</div>
+
+<div lang="zh"><p>调试间歇性故障、追查内存泄漏、性能调优——全部不可约。实现十二个端点、写五个适配器、移植到三个平台——全部可分。</p></div>
+<div lang="en"><p>Debugging an intermittent fault, chasing a memory leak, performance tuning — all irreducible. Implementing twelve endpoints, writing five adapters, porting to three platforms — all separable.</p></div>
+
+<h3><span lang="zh">阶梯:真实项目</span><span lang="en">The ladder, in real projects</span></h3>
+
+<div class="tw">
+<table>
+<thead><tr><th class="n"><span lang="zh">量级</span><span lang="en">Scale</span></th><th><span lang="zh">项目</span><span lang="en">Project</span></th></tr></thead>
+<tbody>
+<tr><td class="n">2–8 h</td><td><span lang="zh">网页贪吃蛇或俄罗斯方块;带数据库的短链服务;一个能用的 Markdown 编辑器</span><span lang="en">Browser Snake or Tetris; a URL shortener with a database; a usable Markdown editor</span></td></tr>
+<tr><td class="n">20–60 h</td><td><span lang="zh">打磨过的 Flappy Bird 复刻;<strong>首个自举版 Git</strong>;含 RESP 与持久化的 Redis 复刻</span><span lang="en">A polished Flappy Bird clone; <strong>the first self-hosting Git</strong>; a Redis clone with RESP and persistence</span></td></tr>
+<tr><td class="n">40–100 h</td><td><span lang="zh">完整路径追踪渲染器(《Ray Tracing in One Weekend》三本全做)</span><span lang="en">A full path tracer (all three <em>Ray Tracing in One Weekend</em> books)</span></td></tr>
+<tr><td class="n">150–400 h</td><td><span lang="zh">完整解释器与字节码虚拟机(《Crafting Interpreters》的 Lox);能启动并调度进程的 xv6 级内核</span><span lang="en">A complete interpreter and bytecode VM (Lox, from <em>Crafting Interpreters</em>); an xv6-class kernel that boots and schedules</span></td></tr>
+<tr><td class="n">500–800 h</td><td><span lang="zh"><strong>Linux 0.01</strong> —— Linus,1991 年 4 至 9 月,业余时间,约一万行</span><span lang="en"><strong>Linux 0.01</strong> — Linus, April–September 1991, part-time, ~10k lines</span></td></tr>
+<tr><td class="n">~1 <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><span lang="zh">首个可用的 <strong>SQLite</strong>;一个 3D 引擎骨架</span><span lang="en">The first usable <strong>SQLite</strong>; a 3D engine skeleton</span></td></tr>
+<tr><td class="n">~5 <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><span lang="zh"><strong>Doom (1993)</strong> —— 约五人一年</span><span lang="en"><strong>Doom (1993)</strong> — roughly five people, one year</span></td></tr>
+<tr><td class="n">~8 <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><span lang="zh"><strong>Stardew Valley</strong> —— 单人开发约 4.5 年,每天约 10 小时</span><span lang="en"><strong>Stardew Valley</strong> — one developer, ~4.5 years at ~10 h/day</span></td></tr>
+<tr><td class="n">~25 <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><span lang="zh">初版 <strong>V8</strong> 引擎</span><span lang="en">The original <strong>V8</strong> engine</span></td></tr>
+<tr><td class="n">30–60 <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><strong>Godot</strong> → 1.0;<strong>LLVM</strong> → 1.0</td></tr>
+<tr><td class="n">10²–10³</td><td><span lang="zh"><strong>Unreal Engine 5</strong>;一款 AAA 游戏</span><span lang="en"><strong>Unreal Engine 5</strong>; a AAA title</span></td></tr>
+<tr><td class="n">~10⁴ <span lang="zh">人年</span><span lang="en">p-yr</span></td><td><strong>Chromium</strong>;Windows</td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh">
+<p>最后几行只能当数量级看。COCOMO 是从代码行数反推工时,假设一切都是传统流程下手写的。Chrome 继承了 WebKit,WebKit 继承了 KHTML。</p>
+<p><strong>把当前能力叠上去:</strong><span class="k80">H₈₀ ≈ 3–5 小时</span>停在第一档——贪吃蛇、短链服务、Markdown 编辑器。<span class="k50">H₅₀ ≈ 12–17 小时</span>以抛硬币的概率够到第二档下沿。</p>
+</div>
+<div lang="en">
+<p>Treat the bottom rows as order-of-magnitude only — COCOMO reverse-engineers effort from line counts and assumes everything was hand-written under traditional process. Chrome inherited WebKit, which inherited KHTML.</p>
+<p><strong>Mapping current capability:</strong> <span class="k80">H₈₀ ≈ 3–5 h</span> stops at the first rung — Snake, a URL shortener, a Markdown editor. <span class="k50">H₅₀ ≈ 12–17 h</span> reaches the low end of the second rung at coin-flip odds.</p>
+</div>
+
+<div class="note">
+<span class="tag"><span lang="zh">校准点</span><span lang="en">Calibration point</span></span>
+<div lang="zh"><p><strong>Linus 用四天写出了自举版 Git。</strong>首次提交 2005 年 4 月 3 日,到 4 月 7 日它已经能管理自己的源码。那是 40 到 60 小时的连贯工作——高于 <span class="k50">H₅₀</span>,远高于 <span class="k80">H₈₀</span>。当前没有模型能可靠复现,而且给它一份完整设计文档也不解决问题。困难从来不在<em>知道 Git 该是什么样</em>,而在四十小时不走偏。</p></div>
+<div lang="en"><p><strong>Linus bootstrapped Git in four days.</strong> First commit April 3rd 2005; by April 7th it was managing its own source. That is 40–60 hours of connected work — above <span class="k50">H₅₀</span>, well above <span class="k80">H₈₀</span>. No current model reliably reproduces it, and handing over a complete design document does not fix it. The difficulty was never <em>knowing what Git should be</em>. It was forty hours without drifting.</p></div>
+</div>
+
+<div lang="zh"><p>按趋势延续(<span class="mono">T₂ = 125 天</span>),<span class="k80">H₈₀</span> 在 2027 年中约 23 小时(自举 Git),2028 年中约 175 小时(Lox、xv6),2029 年中约 1,300 小时(逼近 SQLite、Doom),2030 年中约 10,000 小时(Stardew Valley 量级的单体构建)。而在下限情景下,2030 年中是一个 Markdown 编辑器。</p></div>
+<div lang="en"><p>Under trend continuation (<span class="mono">T₂ = 125 d</span>), <span class="k80">H₈₀</span> reaches ~23 h by mid-2027 (bootstrap Git), ~175 h by mid-2028 (Lox, xv6), ~1,300 h by mid-2029 (approaching SQLite, Doom), ~10,000 h by mid-2030 (Stardew Valley as one coherent build). Under the floor, mid-2030 is a Markdown editor.</p></div>
+
+<div class="pull">
+<p lang="zh"><strong>这两个 2030 年结果之间的落差,就是"这件事会有多快"的诚实答案。</strong></p>
+<p lang="en"><strong>The spread between those two 2030 outcomes is the honest answer to "how fast will this go."</strong></p>
+</div>
+
+<h3><span lang="zh">为什么"AI 造 Chrome"是个错的问题</span><span lang="en">Why "AI builds Chrome" is the wrong question</span></h3>
+
+<div lang="zh">
+<p>通往 Chrome 量级自主性的现实路径,不是某个模型的跨度长到一万小时。而是跨度增长跨过某个阈值(也许几百小时),使得<strong>分解、并行执行与集成本身可以由系统自己跑起来</strong>。此后总产出不再受单任务长度限制,而是受算力、架构一致性和验证吞吐量限制。</p>
+<p>那是一次相变,不是曲线上的某个点。注意另一侧的约束是什么:验证。</p>
+</div>
+<div lang="en">
+<p>The realistic path to Chrome-scale autonomy is not a model whose horizon reaches ten thousand hours. It is horizon growth crossing some threshold — perhaps a few hundred hours — past which <strong>decomposition, parallel execution and integration can themselves be run by the system</strong>. Beyond that, total output stops being bounded by single-task length and starts being bounded by compute, architectural coherence, and verification throughput.</p>
+<p>That is a phase change, not a point on the curve. And note what bounds it on the far side: verification.</p>
+</div>
+
+<!-- ============ PART V ============ -->
+<h2 id="p5"><span lang="zh">第五部分 — 在曲线下工作</span><span lang="en">Part V — Working under the curve</span></h2>
+
+<h3><span lang="zh">复合恒等式</span><span lang="en">The compounding identity</span></h3>
+
+<div lang="zh"><p>对 <span class="mono">n</span> 个串行步骤、单步可靠性 <span class="mono">p</span>:</p></div>
+<div lang="en"><p>For <span class="mono">n</span> serial steps at per-step reliability <span class="mono">p</span>:</p></div>
+
+<div class="tex">$$P_{\text{success}}=p^{\,n},\qquad \frac{d\ln P}{dp}=\frac{n}{p}$$</div>
+
+<div class="tw">
+<table>
+<thead><tr><th class="n">p</th><th class="n">n = 50</th><th class="n">n = 200</th><th class="n">n = 1000</th></tr></thead>
+<tbody>
+<tr><td class="n">0.99</td><td class="n">61%</td><td class="n">13%</td><td class="n" style="color:var(--p80)">0.004%</td></tr>
+<tr><td class="n">0.999</td><td class="n">95%</td><td class="n">82%</td><td class="n">37%</td></tr>
+<tr><td class="n">0.9999</td><td class="n">99.5%</td><td class="n">98%</td><td class="n">90%</td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh"><p>从 99% 提到 99.9%,千步成功率从十万分之四涨到 37%。敏感度随 <span class="mono">n</span> 线性增长——长任务正是可靠性投资最划算的地方。</p></div>
+<div lang="en"><p>Going from 99% to 99.9% takes thousand-step success from 4 in 100,000 to 37%. Sensitivity scales linearly in <span class="mono">n</span> — long tasks are where reliability investment pays.</p></div>
+
+<h3><span lang="zh">单步可靠性不是纯粹的模型属性</span><span lang="en">Per-step reliability is not purely a model property</span></h3>
+
+<div class="tex">$$P_{\text{success}}\approx\big(\underbrace{m}_{\text{model}}\times\underbrace{e}_{\text{environment}}\big)^{\,n}$$</div>
+
+<div lang="zh">
+<p>你动不了 <span class="mono">m</span>。你今天就能动 <span class="mono">e</span>,而且因为它在指数位置上,杠杆被放大 <span class="mono">n</span> 次。环境质量分解为:</p>
+<ul>
+<li><strong>信息完整度</strong> —— 这一步需要的东西在不在手边。模型在缺信息时不会停下来问,它会猜,而猜就是随机游走。</li>
+<li><strong>反馈锐度</strong> —— 一个类型错误是一次确定的修正;一个 segfault 是一轮盲目搜索。</li>
+<li><strong>动作粒度</strong> —— "改这个函数"的单步可靠性远高于"重构这个模块"。粒度本身是可调参数。</li>
+<li><strong>工具可用性</strong> —— 能不能跑、能不能查、能不能调试。没有工具的每一步都是猜。</li>
+<li><strong>上下文洁净度</strong> —— 还挂在上下文里的失败尝试会持续污染后续判断。</li>
+</ul>
+<p>还有一个常被忘记的杠杆:<strong>推理时计算</strong>。更长的思考、带筛选的多次采样、生成-批判-修订循环。这是用钱买可靠性,而不是等新模型发布。</p>
+</div>
+<div lang="en">
+<p>You cannot move <span class="mono">m</span>. You can move <span class="mono">e</span> today, and because it sits in the exponent, the leverage is multiplied <span class="mono">n</span> times. Environment quality decomposes into:</p>
+<ul>
+<li><strong>Information completeness</strong> — is what this step needs at hand? Models do not stop and ask when context is missing. They guess, and guessing is a random walk.</li>
+<li><strong>Feedback sharpness</strong> — a typed compile error is one deterministic correction; a segfault is a blind search.</li>
+<li><strong>Action granularity</strong> — "change this function" has far higher per-step reliability than "refactor this module." Granularity is a tunable parameter.</li>
+<li><strong>Tool availability</strong> — can it run, query, debug? Every step without tools is a guess.</li>
+<li><strong>Context hygiene</strong> — failed attempts still in context keep polluting subsequent judgement.</li>
+</ul>
+<p>There is also a lever people forget: <strong>inference-time compute</strong>. Longer reasoning, sampling with selection, generate-critique-revise loops. That buys reliability with money instead of waiting for a release.</p>
+</div>
+
+<h3><span lang="zh">验证是那个约束</span><span lang="en">Verification is the binding constraint</span></h3>
+
+<div class="pull">
+<p lang="zh">当模型能独立回答"我做完了吗,这对吗",它的自主跨度会成倍扩张。当这个判断必须由你做出,跨度就等于两次人工检查之间的距离——而<strong>你的审查带宽是一个常数,不会每四个月翻一倍。</strong></p>
+<p lang="en">Where a model can independently answer <em>"am I done, and is this right?"</em>, its autonomous span expands by multiples. Where that judgement must come from you, its span collapses to the distance between your inspections — and <strong>your review bandwidth is a constant that does not double every four months.</strong></p>
+</div>
+
+<div lang="zh">
+<p>METR 自己的数据提供了旁证:当评分从算法判定改为整体人工判定时,模型表现大幅下降。那个落差<em>就是</em>"测试通过"与"活干对了"之间的距离,也正是你继承的那一部分。</p>
+<p>还有一个长上下文失效模式值得点名:同一任务在短跨度变体上的成功率为 40–50%,一旦嵌入更长的交互历史,即使相关信息在技术上仍位于窗口内,成功率会跌到 <strong>10% 以下</strong>。这是注意力稀释,不是窗口大小问题。</p>
+</div>
+<div lang="en">
+<p>METR supplies corroborating evidence from its own data: model performance drops substantially when scoring moves from algorithmic to holistic human judgement. That delta <em>is</em> the gap between "tests pass" and "the work is right," and it is exactly the part you inherit.</p>
+<p>There is also a long-context failure mode worth naming. Success rates of 40–50% on short-horizon task variants fall <strong>below 10%</strong> when the same task is embedded in longer interaction history — even when the relevant information is still technically inside the window. This is attention dilution, not a window-size problem.</p>
+</div>
+
+<h4><span lang="zh">先建验证基础设施</span><span lang="en">Build verification infrastructure first</span></h4>
+<div lang="zh">
+<ul>
+<li><strong>属性测试与模糊测试</strong>优于例子测试。它们能抓到你没想到的情况,而那正是模型出错的地方。</li>
+<li><strong>类型、schema、可执行契约。</strong>把一整类错误变成编译期或启动期失败——连测试都不用跑。</li>
+<li><strong>非二元维度的回归基线</strong> —— 延迟、输出质量。要数字,不要印象。</li>
+<li><strong>确定性。</strong>随机种子、时间、并发顺序全部可控。不能复现的失败无法被修复。</li>
+</ul>
+</div>
+<div lang="en">
+<ul>
+<li><strong>Property-based and fuzz testing</strong> over example-based tests. They catch cases you did not think of, which is exactly where models fail.</li>
+<li><strong>Types, schemas, executable contracts.</strong> These turn whole error classes into compile-time or startup failures — no test run required.</li>
+<li><strong>Regression baselines for non-binary dimensions</strong> — latency, output quality. Numbers, not impressions.</li>
+<li><strong>Determinism.</strong> Seeds, clocks, concurrency order controlled. A failure that cannot be reproduced cannot be fixed.</li>
+</ul>
+</div>
+
+<h4><span lang="zh">防御 reward hacking</span><span lang="en">Defend against reward hacking</span></h4>
+<div lang="zh">
+<ul>
+<li>测试与实现在不同上下文中生成;绝不让写实现的那一轮同时改测试。</li>
+<li>测试的 diff 与实现的 diff 分开审查。</li>
+<li>断言端到端行为和黄金输出,而不是内部调用模式。</li>
+<li>保留一份模型永远看不到的测试集。</li>
+</ul>
+</div>
+<div lang="en">
+<ul>
+<li>Generate tests in a different context from the implementation; never let the implementing turn edit tests.</li>
+<li>Review test diffs separately from implementation diffs.</li>
+<li>Assert end-to-end behaviour and golden outputs, not internal call patterns.</li>
+<li>Hold back a test set the model never sees.</li>
+</ul>
+</div>
+
+<h4><span lang="zh">在规格上花时间</span><span lang="en">Spend on specifications</span></h4>
+<div lang="zh">
+<p>真实项目中大部分失败不是编码失败,而是未言明的需求、未考虑的边界条件、与相邻系统未文档化的契约。这些都不出现在任何基准里,却全部出现在你的项目里。</p>
+<p>按顺序写下:<strong>验收标准</strong>(怎么算做完了——这一条比其余全部加起来更重要)、接口契约与数据形状、失败模式与处理方式、明确的非目标、以及已知的坑及其历史原因。</p>
+<p>一个附带收益:写规格的过程会暴露<em>你自己</em>没有决定的东西。相当一部分"模型做不了"其实是"从来没有人把这件事说清楚过"。</p>
+</div>
+<div lang="en">
+<p>Most real failures are not coding failures. They are unstated requirements, unconsidered edge cases, undocumented contracts with adjacent systems. None of that appears in any benchmark; all of it appears in your project.</p>
+<p>Write down, in order: <strong>acceptance criteria</strong> (how do we know it's done — this outweighs everything else combined), interface contracts and data shapes, failure modes and handling, explicit non-goals, and known landmines with their history.</p>
+<p>A side benefit: writing the spec surfaces what <em>you</em> had not decided. A surprising share of "the model can't do this" is "nobody ever specified this."</p>
+</div>
+
+<h4><span lang="zh">为廉价判断设计检查点</span><span lang="en">Design checkpoints for cheap judgement</span></h4>
+<div lang="zh">
+<p>检查点有效,但注意真正的上限是<strong>你的审查带宽</strong>。每个检查点花你二十分钟,一天就只有十五个。你没有延长自主性,你把自己变成了质检工位。</p>
+<p>所以设计目标不是<em>更频繁</em>地检查,而是<em>更便宜</em>地检查:</p>
+</div>
+<div lang="en">
+<p>Checkpoints work, but note the real cap: <strong>your review bandwidth</strong>. At twenty minutes per checkpoint you get fifteen a day. You have not extended autonomy; you have become a QA station.</p>
+<p>The design goal is not <em>more frequent</em> checks but <em>cheaper</em> ones:</p>
+</div>
+
+<div class="pull">
+<p lang="zh"><strong>你能不能在两分钟内做出「继续 / 回退」的判断?</strong>不能,这个检查点的位置就错了。</p>
+<p lang="en"><strong>Can you decide continue-or-revert in under two minutes?</strong> If not, the checkpoint is in the wrong place.</p>
+</div>
+
+<div lang="zh"><p>好的检查点产出一个<em>可运行的东西</em>而非一堆改动;有明确的通过信号;只需要读结论而不是读 diff;并且能原子回退。位置要放在<strong>状态边界,不是时间边界</strong>——不是"每小时一次",而是"每当系统回到可运行、可测试、可丢弃的状态时"。</p></div>
+<div lang="en"><p>A good checkpoint produces a runnable artifact rather than a pile of edits; has an unambiguous pass signal; requires reading a conclusion rather than a diff; and reverts atomically. Place them at <strong>state boundaries, not time boundaries</strong> — not "every hour," but "every time the system returns to a runnable, testable, discardable state."</p></div>
+
+<h3><span lang="zh">并行分解的标准流程</span><span lang="en">An SOP for parallel decomposition</span></h3>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 232" role="img" aria-label="Parallel decomposition pipeline: classify, freeze contract, slice vertically, run branches, integrate serially">
+  <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round"/></marker></defs>
+
+  <rect x="16" y="92" width="104" height="48" fill="#FFFFFF" stroke="#16242B" stroke-width="1"/>
+  <text x="68" y="108" text-anchor="middle" font-size="11.5" fill="#7C8B92" dominant-baseline="central">0</text>
+  <text lang="zh" x="68" y="126" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">判别</text>
+  <text lang="en" x="68" y="126" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Classify</text>
+
+  <line x1="120" y1="116" x2="146" y2="116" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+  <rect x="148" y="92" width="112" height="48" fill="#F0EBF7" stroke="#7A5AA8" stroke-width="1"/>
+  <text x="204" y="108" text-anchor="middle" font-size="11.5" fill="#8A7AB0" dominant-baseline="central">1</text>
+  <text lang="zh" x="204" y="126" text-anchor="middle" font-size="12.5" fill="#4E3670" dominant-baseline="central">冻结契约</text>
+  <text lang="en" x="204" y="126" text-anchor="middle" font-size="12.5" fill="#4E3670" dominant-baseline="central">Freeze contract</text>
+
+  <line x1="260" y1="116" x2="286" y2="116" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+  <rect x="288" y="92" width="96" height="48" fill="#FFFFFF" stroke="#16242B" stroke-width="1"/>
+  <text x="336" y="108" text-anchor="middle" font-size="11.5" fill="#7C8B92" dominant-baseline="central">2</text>
+  <text lang="zh" x="336" y="126" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">垂直切分</text>
+  <text lang="en" x="336" y="126" text-anchor="middle" font-size="12.5" fill="#16242B" dominant-baseline="central">Slice</text>
+
+  <path d="M384 106 L412 106 L412 44 L436 44" fill="none" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar2)"/>
+  <path d="M384 116 L436 116" fill="none" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar2)"/>
+  <path d="M384 126 L412 126 L412 188 L436 188" fill="none" stroke="#16242B" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+  <rect x="438" y="24" width="110" height="40" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <rect x="438" y="96" width="110" height="40" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <rect x="438" y="168" width="110" height="40" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <text lang="zh" x="493" y="44" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">分支 1 · 自带测试</text>
+  <text lang="en" x="493" y="44" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">Branch 1 · own tests</text>
+  <text lang="zh" x="493" y="116" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">分支 2 · 自带测试</text>
+  <text lang="en" x="493" y="116" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">Branch 2 · own tests</text>
+  <text lang="zh" x="493" y="188" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">分支 3 · 自带测试</text>
+  <text lang="en" x="493" y="188" text-anchor="middle" font-size="12" fill="#16242B" dominant-baseline="central">Branch 3 · own tests</text>
+
+  <path d="M548 44 L576 44 L576 106 L600 106" fill="none" stroke="#B8761E" stroke-width="1.2" marker-end="url(#ar2)"/>
+  <path d="M548 116 L600 116" fill="none" stroke="#B8761E" stroke-width="1.2" marker-end="url(#ar2)"/>
+  <path d="M548 188 L576 188 L576 126 L600 126" fill="none" stroke="#B8761E" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+  <rect x="602" y="92" width="84" height="48" fill="#F9EFDF" stroke="#B8761E" stroke-width="1"/>
+  <text x="644" y="108" text-anchor="middle" font-size="11.5" fill="#B8761E" dominant-baseline="central">5</text>
+  <text lang="zh" x="644" y="126" text-anchor="middle" font-size="12.5" fill="#7A4A0F" dominant-baseline="central">串行集成</text>
+  <text lang="en" x="644" y="126" text-anchor="middle" font-size="12.5" fill="#7A4A0F" dominant-baseline="central">Integrate</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 4 — 集成阶段本身是不可约的,因此必须串行,成本随分支数约呈平方增长。</span><span lang="en">Fig. 4 — Integration is itself irreducible, so it must run serially, and its cost grows roughly quadratically in branch count.</span></figcaption>
+</figure>
+
+<pre><span class="cm">0. Classify  </span>Per pair: "does B need A's failed-attempt history?"
+             Yes → irreducible, do not split.
+<span class="cm">1. Contract  </span>Single source defines interfaces. Make them executable
+             (types, schemas, stubs, OpenAPI). Then FREEZE.
+<span class="cm">2. Slice     </span>Vertically. Each slice owns its full stack.
+             Test: can this slice pass tests alone? No → sliced wrong.
+<span class="cm">3. Accept    </span>Each slice ships its own tests and a pass signal.
+<span class="cm">4. Isolate   </span>Separate worktree, separate context, zero inter-branch
+             communication. Needing it means step 0 was wrong.
+<span class="cm">5. Integrate </span>Serial. Most-depended-upon branch first, then outward.
+             Full test run after each merge.
+<span class="cm">6. Budget    </span>Parallelism k ≤ 5. Integration cost ~ O(k²).</pre>
+
+<div lang="zh">
+<p><strong>第 1 步被违反得最多,代价也最大。</strong>两个分支各自"顺手把接口整理了一下",产生的合并成本会超过并行省下的一切。</p>
+<p><strong>第 2 步区分真假分解。</strong>水平切分——一个分支做全部 model,另一个做全部 controller——会让每个分支在全部落地前都无法验证。那是延迟集成,不是分解。</p>
+<p><strong>第 6 步解释了并行度为什么上限很低。</strong>集成本身是不可约的,而它暴露的问题是契约理解偏差,需要跨分支上下文才能诊断。按两两接口摩擦计,成本约为 <span class="mono">C(k,2) = O(k²)</span>。超过四五个分支就会吃掉收益。想要更多并行就分层:四个分支,集成,再四个。</p>
+<p>一个反直觉的后果:并行缩短了总耗时,却<strong>提高了你单位时间内必须供给的判断密度</strong>。五个分支意味着同时持有五份上下文。这正是第 3 步关键的原因——它把"判断五件事"变成"读五个红绿灯"。做不到这一点,串行三小时往往胜过并行一小时加上你两小时的脑力。</p>
+</div>
+<div lang="en">
+<p><strong>Step 1 is violated most often and costs the most.</strong> Two branches each "tidying the interface a little" produces merge costs exceeding everything parallelism saved.</p>
+<p><strong>Step 2 separates real decomposition from fake.</strong> Horizontal slicing — one branch does all models, another all controllers — leaves every branch unverifiable until everything lands. That is deferred integration, not decomposition.</p>
+<p><strong>Step 6 is why parallelism caps low.</strong> Integration is itself irreducible, and the problems it surfaces are contract misunderstandings requiring cross-branch context to diagnose. With pairwise interface friction, cost grows roughly as <span class="mono">C(k,2) = O(k²)</span>. Past four or five branches it eats the gains. Want more? Layer it: four branches, integrate, four more.</p>
+<p>One counterintuitive consequence: parallelism cuts elapsed time but <strong>raises the density of judgement you must supply</strong>. Five branches means holding five contexts. Which is why step 3 matters — it converts "judge five things" into "read five status lights." Without it, three hours serial often beats one hour parallel plus two hours of your attention.</p>
+</div>
+
+<div class="tw">
+<table>
+<caption><span lang="zh">表 3 — 两种方法的分工</span><span lang="en">Table 3 — Division of labour</span></caption>
+<thead><tr><th></th><th><span lang="zh">处理的问题</span><span lang="en">Handles</span></th><th><span lang="zh">机制</span><span lang="en">Mechanism</span></th><th><span lang="zh">适用于</span><span lang="en">Applies to</span></th></tr></thead>
+<tbody>
+<tr><td><strong><span lang="zh">检查点</span><span lang="en">Checkpoints</span></strong></td><td><span lang="zh">不可约任务的长度</span><span lang="en">Length of irreducible tasks</span></td><td><span lang="zh">阻止错误传播,不缩短任务</span><span lang="en">Prevents propagation; does not shorten</span></td><td><span lang="zh">调试、探索、重构 —— 搜索形态</span><span lang="en">Debugging, exploration, refactoring — search-shaped</span></td></tr>
+<tr><td><strong><span lang="zh">并行分解</span><span lang="en">Parallel decomposition</span></strong></td><td><span lang="zh">可分工作的总量</span><span lang="en">Volume of separable work</span></td><td><span lang="zh">绕过 H₈₀,每个分支都在其内</span><span lang="en">Bypasses H₈₀; each branch sits inside it</span></td><td><span lang="zh">实现、移植、覆盖 —— 构造形态</span><span lang="en">Implementation, porting, coverage — construction-shaped</span></td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh"><p>真实项目是两者的混合。把项目切成构造部分与搜索部分,前者并行,后者串行并加密检查点,然后<strong>把你自己的注意力放在后者</strong>——那是模型最容易走偏、而且走偏最贵的地方。</p></div>
+<div lang="en"><p>Real projects mix both. Split the project into constructive and search-shaped parts, parallelize the first, serialize the second with dense checkpoints, and put <strong>your own attention on the second</strong> — that is where models drift, and where drift is most expensive.</p></div>
+
+<!-- ============ PART VI ============ -->
+<h2 id="p6"><span lang="zh">第六部分 — 曲线之外</span><span lang="en">Part VI — Beyond software</span></h2>
+
+<div lang="zh"><p>METR 必须把任务做成自包含、明确定义、可自动判分的。这三个约束定义了可自动化的区域。同一组约束换个角度看——作为<em>价值</em>的过滤器——能解释工程之外的很多事情。</p></div>
+<div lang="en"><p>METR had to make tasks self-contained, well-specified and algorithmically scorable. Those constraints define the automatable region. The same constraints, read as a filter on <em>value</em>, explain a great deal outside engineering.</p></div>
+
+<h3><span lang="zh">哪些数字产品崩了,哪些没有</span><span lang="en">Which digital goods collapsed, and which did not</span></h3>
+
+<div lang="zh">
+<p>数字产品的<em>复制</em>边际成本几十年前就归零了。最近改变的是<em>创造</em>的边际成本。崩塌落得并不均匀,而且模式是可读的。</p>
+<p><strong>归零的:</strong>孤立、可替代、无上下文的产出——库存音乐、模板文案、通用 CRUD 后端、落地页、图库摄影。Getty 的市值从 2022 年高点跌去约九成。</p>
+<p><strong>保住或上涨的:</strong>分发与注意力;对失败的责任承担;网络效应与数据积累;合规与认证;整合与运维;与物理世界的接口。</p>
+<p>共同线索是:价值从制品迁移到了它周围的一切——而周围的东西大多是<strong>某种形式的验证</strong>。合规认证是验证。SLA 是附带责任的验证。品牌是被时间摊销的验证。分发是相关性的验证。</p>
+</div>
+<div lang="en">
+<p>The marginal cost of <em>reproducing</em> digital goods hit zero decades ago. What changed recently is the marginal cost of <em>creation</em>. The collapse landed unevenly, and the pattern is legible.</p>
+<p><strong>Went to zero:</strong> isolated, substitutable, context-free output — stock music, template copy, generic CRUD backends, landing pages, stock photography. Getty's market value fell roughly 90% from its 2022 peak.</p>
+<p><strong>Held or rose:</strong> distribution and attention; accountability for failure; network effects and accumulated data; compliance and certification; integration and operations; interfaces to the physical world.</p>
+<p>The common thread is that value migrated from the artifact to everything around it — and most of what surrounds it is <strong>some form of verification</strong>. A compliance certification is verification. An SLA is verification with liability attached. A brand is verification amortized over time. Distribution is verification of relevance.</p>
+</div>
+
+<div class="pull">
+<p lang="zh">当生产变得廉价而充裕,稀缺品就是<strong>"这个东西正确、安全、恰当"的可信确认。</strong></p>
+<p lang="en">When production becomes cheap and abundant, the scarce good is <strong>trustworthy confirmation that a given artifact is correct, safe and appropriate.</strong></p>
+</div>
+
+<div lang="zh">
+<p>这也解释了一个让人困惑的背离:录音音乐被压到近乎免费的同时,演唱会票价暴涨。当可复制的东西变免费,<strong>不可复制的东西</strong>就升值。在场、稀缺、与创作者的关系——这些都无法通过检查制品来验证,只能通过来源验证。</p>
+<p>它还让劳动力冲击变得可预测而非神秘。被掏空的是<strong>中间层</strong>——称职的、中等熟练度的、无署名的生产。顶端(名字、关系、独特视角)和底端(业余、自娱)相对不受影响。这不是一个宽慰人的观察:调整在两三年内发生,远快于摄影留给肖像画家的几十年,而成本落在那些来不及转身的人身上。</p>
+</div>
+<div lang="en">
+<p>It also explains a divergence people find puzzling: recorded music compressed toward free while live ticket prices soared. When the reproducible becomes free, the <strong>non-reproducible</strong> appreciates. Presence, scarcity, relationship to the maker — none of which can be verified by inspecting the artifact, all of which are verified by provenance.</p>
+<p>And it makes the labour impact predictable rather than mysterious. What gets hollowed out is <strong>the middle</strong> — competent, mid-skilled, unnamed production. The top (name, relationship, distinctive perspective) and the bottom (amateur, self-directed) are comparatively insulated. That is not a consoling observation: adjustment happens over two or three years, far faster than the decades photography gave portrait painters, and the cost lands on people who have no time to move.</p>
+</div>
+
+<h3><span lang="zh">版权问的是同一个问题,只是换了名字</span><span lang="en">Copyright asks the same question, under another name</span></h3>
+
+<div lang="zh"><p>版权保护<strong>表达</strong>,不保护思想、方法或共享语汇。落到音乐上,产生了一种看似武断的不对称——直到你看到机制:</p></div>
+<div lang="en"><p>Copyright protects <strong>expression</strong>, not ideas, methods or shared vocabulary. Applied to music, that produces an asymmetry that looks arbitrary until you see the mechanism:</p></div>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 264" role="img" aria-label="Musical work decomposed into melody, harmony and orchestration, with melody protected and the rest unprotected">
+  <rect x="276" y="16" width="148" height="42" fill="#FFFFFF" stroke="#16242B" stroke-width="1"/>
+  <text lang="zh" x="350" y="37" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">音乐作品</text>
+  <text lang="en" x="350" y="37" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">Musical work</text>
+
+  <path d="M350 58 L350 76 L146 76 L146 98" fill="none" stroke="#7C8B92" stroke-width="1"/>
+  <path d="M350 58 L350 98" fill="none" stroke="#7C8B92" stroke-width="1"/>
+  <path d="M350 58 L350 76 L554 76 L554 98" fill="none" stroke="#7C8B92" stroke-width="1"/>
+
+  <rect x="56" y="100" width="180" height="44" fill="#F0EBF7" stroke="#7A5AA8" stroke-width="1"/>
+  <text lang="zh" x="146" y="122" text-anchor="middle" font-size="13" fill="#4E3670" dominant-baseline="central">旋律</text>
+  <text lang="en" x="146" y="122" text-anchor="middle" font-size="13" fill="#4E3670" dominant-baseline="central">Melody</text>
+
+  <rect x="260" y="100" width="180" height="44" fill="#F9EFDF" stroke="#B8761E" stroke-width="1"/>
+  <text lang="zh" x="350" y="122" text-anchor="middle" font-size="13" fill="#7A4A0F" dominant-baseline="central">和声 / 和弦走向</text>
+  <text lang="en" x="350" y="122" text-anchor="middle" font-size="13" fill="#7A4A0F" dominant-baseline="central">Harmony</text>
+
+  <rect x="464" y="100" width="180" height="44" fill="#F9EFDF" stroke="#B8761E" stroke-width="1"/>
+  <text lang="zh" x="554" y="122" text-anchor="middle" font-size="13" fill="#7A4A0F" dominant-baseline="central">配器 / 音色 / 律动</text>
+  <text lang="en" x="554" y="122" text-anchor="middle" font-size="13" fill="#7A4A0F" dominant-baseline="central">Orchestration, timbre</text>
+
+  <line x1="146" y1="144" x2="146" y2="172" stroke="#7A5AA8" stroke-width="1.2"/>
+  <path d="M350 144 L350 160 L450 160 L450 172" fill="none" stroke="#B8761E" stroke-width="1.2"/>
+  <path d="M554 144 L554 160 L450 160" fill="none" stroke="#B8761E" stroke-width="1.2"/>
+
+  <rect x="56" y="174" width="180" height="58" fill="#FFFFFF" stroke="#7A5AA8" stroke-width="1.6"/>
+  <text lang="zh" x="146" y="193" text-anchor="middle" font-size="13" font-weight="500" fill="#4E3670" dominant-baseline="central">具体表达 · 受保护</text>
+  <text lang="en" x="146" y="193" text-anchor="middle" font-size="13" font-weight="500" fill="#4E3670" dominant-baseline="central">Specific expression</text>
+  <text lang="zh" x="146" y="213" text-anchor="middle" font-size="11.5" fill="#5D4485" dominant-baseline="central">重新演奏也需要授权</text>
+  <text lang="en" x="146" y="213" text-anchor="middle" font-size="11.5" fill="#5D4485" dominant-baseline="central">PROTECTED — licence needed</text>
+
+  <rect x="360" y="174" width="180" height="58" fill="#FFFFFF" stroke="#B8761E" stroke-width="1.6"/>
+  <text lang="zh" x="450" y="193" text-anchor="middle" font-size="13" font-weight="500" fill="#7A4A0F" dominant-baseline="central">共享语法 · 不受保护</text>
+  <text lang="en" x="450" y="193" text-anchor="middle" font-size="13" font-weight="500" fill="#7A4A0F" dominant-baseline="central">Shared grammar</text>
+  <text lang="zh" x="450" y="213" text-anchor="middle" font-size="11.5" fill="#8A5A18" dominant-baseline="central">风格,可自由借用</text>
+  <text lang="en" x="450" y="213" text-anchor="middle" font-size="11.5" fill="#8A5A18" dominant-baseline="central">UNPROTECTED — style is free</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 5 — 和声不受保护是个空间大小论证:常用调性体系里的实用和弦走向数以百计,且几乎全被用过;旋律空间在组合上大得多。</span><span lang="en">Fig. 5 — Harmony's unprotected status is a space-size argument: practical progressions number in the hundreds and are essentially exhausted; melodic space is combinatorially far larger.</span></figcaption>
+</figure>
+
+<div lang="zh">
+<p>法理学直接命名了这一点:<strong>合并原则</strong>(当表达形式过少时,表达并入不受保护的思想)与<strong>通用场景</strong>(某一体裁的惯例性元素自由使用)。《Stairway to Heaven》案正是如此——那段下行半音线被认定为公共音乐素材,Led Zeppelin 胜诉。</p>
+<p>这对"从零重新录制"意味着什么?重新演奏消除了<strong>录音制品权</strong>,但不触及<strong>词曲权</strong>——后者管辖旋律,与演奏者是谁无关。而大幅改编还会额外触发<strong>改编权</strong>,因为法定翻唱许可通常禁止改变作品的根本特征。干净的解法直接从图中读出:保留和声、律动、配器与混音,重写旋律。你想要的"那个味道"几乎全部住在不受保护的那一层。</p>
+<p>还有两点反直觉但重要:<strong>不存在百分比门槛</strong>——没有"八小节",没有"四秒"。标准是实质性相似加接触可能性,整体认定。澳洲的 <em>Larrikin v EMI</em> 案就因《Down Under》中<strong>两小节</strong>长笛判定侵权。而且<strong>潜意识抄袭同样构成侵权</strong>:《My Sweet Lord》案中法院接受 Harrison 并非故意,仍然判了责任。</p>
+</div>
+<div lang="en">
+<p>The doctrine names this directly: <strong>merger</strong> (when expression has too few forms, it merges into the unprotectable idea) and <strong>scènes à faire</strong> (conventional elements of a genre are free). <em>Stairway to Heaven</em> turned on exactly this — the descending chromatic line was held to be common musical material, and Led Zeppelin won.</p>
+<p>What this means for re-recording from scratch: re-performing removes the <strong>sound recording</strong> right but does not touch the <strong>composition</strong> right, which governs the melody regardless of who plays it. Heavy re-arrangement additionally engages the <strong>adaptation</strong> right, since statutory cover licences typically forbid altering a work's fundamental character. The clean solution reads straight off the diagram: keep the harmony, groove, instrumentation and mix; write a new melody. The "feel" you wanted lives almost entirely in the unprotected layer.</p>
+<p>Two more counterintuitive points. There is <strong>no percentage threshold</strong> — no "eight bars," no "four seconds." The test is substantial similarity plus access, assessed holistically. In Australia, <em>Larrikin v EMI</em> found infringement on <strong>two bars</strong> of flute in <em>Down Under</em>. And <strong>subconscious copying still infringes</strong>: in the <em>My Sweet Lord</em> case the court accepted Harrison did not intend it and found liability anyway.</p>
+</div>
+
+<h3><span lang="zh">AI 生成音乐:三个彼此独立的问题</span><span lang="en">AI-generated music: three separate questions</span></h3>
+
+<div lang="zh"><p>最常见的错误是把三个互不相干的法律问题揉成一个。</p></div>
+<div lang="en"><p>The single most common error is collapsing three independent legal questions into one.</p></div>
+
+<figure>
+<div class="fig">
+<svg viewBox="0 0 700 268" role="img" aria-label="Three independent legal layers of AI-generated music: training, output, and ownership">
+  <rect x="270" y="14" width="160" height="40" fill="#FFFFFF" stroke="#16242B" stroke-width="1"/>
+  <text lang="zh" x="350" y="34" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">AI 生成音乐</text>
+  <text lang="en" x="350" y="34" text-anchor="middle" font-size="13.5" fill="#16242B" dominant-baseline="central">AI-generated music</text>
+
+  <path d="M350 54 L350 70 L136 70 L136 92" fill="none" stroke="#7C8B92" stroke-width="1"/>
+  <path d="M350 54 L350 92" fill="none" stroke="#7C8B92" stroke-width="1"/>
+  <path d="M350 54 L350 70 L564 70 L564 92" fill="none" stroke="#7C8B92" stroke-width="1"/>
+
+  <rect x="24" y="94" width="224" height="150" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+  <rect x="238" y="94" width="224" height="150" fill="#FFFFFF" stroke="#16242B" stroke-width="1.6"/>
+  <rect x="452" y="94" width="224" height="150" fill="#FFFFFF" stroke="#D3D9DA" stroke-width="1"/>
+
+  <text x="136" y="114" text-anchor="middle" font-size="11.5" fill="#7C8B92" dominant-baseline="central">1</text>
+  <text lang="zh" x="136" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">训练</text>
+  <text lang="en" x="136" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">Training</text>
+  <text lang="zh" x="136" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">训练是否侵权?</text>
+  <text lang="en" x="136" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Is training infringement?</text>
+  <text lang="zh" x="136" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">责任方:AI 公司</text>
+  <text lang="en" x="136" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Liable: the AI company</text>
+  <text lang="zh" x="136" y="214" text-anchor="middle" font-size="12" fill="#B8761E" dominant-baseline="central">状态:诉讼中,未决</text>
+  <text lang="en" x="136" y="214" text-anchor="middle" font-size="12" fill="#B8761E" dominant-baseline="central">Status: litigated, unsettled</text>
+
+  <text x="350" y="114" text-anchor="middle" font-size="11.5" fill="#7C8B92" dominant-baseline="central">2</text>
+  <text lang="zh" x="350" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">输出</text>
+  <text lang="en" x="350" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">Output</text>
+  <text lang="zh" x="350" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">与某首具体作品实质相似?</text>
+  <text lang="en" x="350" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Similar to one specific work?</text>
+  <text lang="zh" x="350" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">责任方:使用者</text>
+  <text lang="en" x="350" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Liable: the user</text>
+  <text lang="zh" x="350" y="214" text-anchor="middle" font-size="12" fill="#7A5AA8" dominant-baseline="central">风险通道:记忆性复现</text>
+  <text lang="en" x="350" y="214" text-anchor="middle" font-size="12" fill="#7A5AA8" dominant-baseline="central">Risk channel: memorization</text>
+
+  <text x="564" y="114" text-anchor="middle" font-size="11.5" fill="#7C8B92" dominant-baseline="central">3</text>
+  <text lang="zh" x="564" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">归属</text>
+  <text lang="en" x="564" y="134" text-anchor="middle" font-size="13.5" font-weight="500" fill="#16242B" dominant-baseline="central">Ownership</text>
+  <text lang="zh" x="564" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">你能拥有它吗?</text>
+  <text lang="en" x="564" y="166" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Can you own the output?</text>
+  <text lang="zh" x="564" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">要求:人类作者</text>
+  <text lang="en" x="564" y="190" text-anchor="middle" font-size="12" fill="#4A5B63" dominant-baseline="central">Requires human authorship</text>
+  <text lang="zh" x="564" y="214" text-anchor="middle" font-size="12" fill="#B8761E" dominant-baseline="central">答案:基本不能</text>
+  <text lang="en" x="564" y="214" text-anchor="middle" font-size="12" fill="#B8761E" dominant-baseline="central">Answer: largely no</text>
+</svg>
+</div>
+<figcaption><span lang="zh">图 6 — 三层责任主体不同、风险通道不同、结论也不同。中间那层才是使用者真正面对的问题。</span><span lang="en">Fig. 6 — Three layers, three different liable parties, three different answers. The middle one is the only layer the user actually faces.</span></figcaption>
+</figure>
+
+<div lang="zh">
+<p><strong>第一层</strong>是钱所在的地方。RIAA 于 2024 年 6 月起诉 Suno 与 Udio。到 2025 年底战线分裂:Warner 与 Suno 和解,UMG 与 Udio 和解(据报道每次生成 0.002–0.005 美元),而 Sony 与 Universal 继续诉讼。2026 年 5 月他们申请把 Suno 案的涉案录音从 560 首扩大到 61,026 首,潜在法定赔偿超过 90 亿美元。首个针对生成式音乐工具的实体裁决来自<strong>慕尼黑,2026 年 7 月 31 日</strong>,地方法院第一庭就 GEMA 诉 Suno 案作出对 GEMA 有利的裁决。美国的 fair use 裁决已排到 2027 年。</p>
+<p><strong>第二层</strong>是人们直觉反转的地方。常见的担忧——<em>"模型学了几百万首歌,所以输出必然同时像很多首"</em>——实际上论证的是<strong>更低</strong>的输出风险,而非更高。侵权判定永远是一对一的:原告必须指向一首具体作品。在大语料上的统计平均<em>消解</em>个体特征,而非叠加。像一万首歌意味着不特别像任何一首,而在平均中幸存下来的恰好是上一节里那个不受保护的层——风格、语汇、惯例。</p>
+<p>真正的例外是<strong>记忆性复现</strong>:对高频或极具辨识度的训练样本过拟合。这正是 RIAA 证据最有杀伤力的部分。规避措施直接由此导出——prompt 里绝不出现艺人名或歌名,只用描述性词汇(速度、调式、配器、年代、质感)。这既降低记忆性复现概率,也改善你在接触与意图认定上的位置。</p>
+<p><strong>第三层</strong>与前两层正交。美国版权局认为缺乏人类创作性贡献的纯 AI 生成内容不可登记,<em>Thaler v. Perlmutter</em> 确认了人类作者要求。澳洲更严格,连"计算机生成作品"这个类别都没有。后果不是你不能使用,而是<strong>你无法排除任何其他人使用。</strong>做背景音乐或许无所谓;作为打算授权或维权的资产,它是个空壳。</p>
+</div>
+<div lang="en">
+<p><strong>Layer 1</strong> is where the money is. RIAA sued Suno and Udio in June 2024. By late 2025 the front had split: Warner settled with Suno, UMG settled with Udio (reportedly $0.002–0.005 per generation), while Sony and Universal continued litigating. In May 2026 they moved to expand the Suno case from 560 to 61,026 recordings, pushing potential statutory damages past $9B. The first substantive ruling on a generative music tool came not from New York or Boston but <strong>Munich, on 31 July 2026</strong>, where the Regional Court ruled for GEMA against Suno. US fair-use rulings are now scheduled into 2027.</p>
+<p><strong>Layer 2</strong> is where intuitions invert. The common worry — <em>"the model trained on millions of songs, so its output must resemble all of them at once"</em> — actually argues for <strong>lower</strong> output risk, not higher. Infringement is always one-to-one: a plaintiff must point at a specific work. Statistical averaging over a large corpus <em>dissolves</em> individual identity rather than accumulating it. Resembling ten thousand songs means resembling none in particular, and what survives averaging is exactly the unprotected layer from the previous section — style, vocabulary, convention.</p>
+<p>The real exception is <strong>memorization</strong>: overfitting on high-frequency or highly distinctive training examples. This is what made the RIAA's exhibits damaging. The mitigation follows directly — never name an artist or track in a prompt; use purely descriptive terms (tempo, mode, instrumentation, era, texture). That lowers memorization probability <em>and</em> improves your position on access and intent.</p>
+<p><strong>Layer 3</strong> is orthogonal to both. The US Copyright Office holds that purely AI-generated content lacking human creative contribution is unregistrable, and <em>Thaler v. Perlmutter</em> confirmed human authorship as a requirement. Australia is stricter still — it has no computer-generated-works category at all. The consequence is not that you cannot use the output; it is that <strong>you cannot exclude anyone else from using it.</strong> For background music that may not matter. For an asset you intend to license or defend, it is a hollow shell.</p>
+</div>
+
+<h3><span lang="zh">底下那个模式</span><span lang="en">The pattern underneath</span></h3>
+
+<div class="tw">
+<table>
+<thead><tr><th><span lang="zh">领域</span><span lang="en">Domain</span></th><th><span lang="zh">可自动化 / 不受保护 / 廉价</span><span lang="en">Automatable · unprotected · cheap</span></th><th><span lang="zh">抗拒 / 受保护 / 有价值</span><span lang="en">Resistant · protected · valuable</span></th></tr></thead>
+<tbody>
+<tr><td><strong><span lang="zh">METR 任务</span><span lang="en">METR tasks</span></strong></td><td><span lang="zh">自包含、有规格、可自动判分</span><span lang="en">Self-contained, specified, auto-scorable</span></td><td><span lang="zh">需要累积的失败假设状态</span><span lang="en">Requires accumulated failed-attempt state</span></td></tr>
+<tr><td><strong><span lang="zh">软件工作</span><span lang="en">Software work</span></strong></td><td><span lang="zh">构造形态,契约式交接</span><span lang="en">Construction-shaped, contract handoff</span></td><td><span lang="zh">搜索形态,隐性状态交接</span><span lang="en">Search-shaped, tacit-state handoff</span></td></tr>
+<tr><td><strong><span lang="zh">数字产品</span><span lang="en">Digital goods</span></strong></td><td><span lang="zh">可替代、无上下文的制品</span><span lang="en">Substitutable, context-free artifacts</span></td><td><span lang="zh">验证、信任、关系、来源</span><span lang="en">Verification, trust, relationship, provenance</span></td></tr>
+<tr><td><strong><span lang="zh">版权</span><span lang="en">Copyright</span></strong></td><td><span lang="zh">共享语法 —— 和声、风格、惯例</span><span lang="en">Shared grammar — harmony, style, convention</span></td><td><span lang="zh">与某个作者绑定的具体表达</span><span lang="en">Specific expression tied to one author</span></td></tr>
+<tr><td><strong><span lang="zh">AI 输出</span><span lang="en">AI output</span></strong></td><td><span lang="zh">语料的统计平均</span><span lang="en">Statistical average of a corpus</span></td><td><span lang="zh">被记忆的具体表达</span><span lang="en">Memorized specific expression</span></td></tr>
+</tbody></table>
+</div>
+
+<div lang="zh">
+<p>每一行里,左栏是<strong>能被平均或规格化掉的东西</strong>,右栏是<strong>需要不可约的、个体的、不可替代状态的东西</strong>。</p>
+<p>这不是措辞上的巧合。自动化、市场价值与版权是在用不同的语域回答同一个底层问题:<em>这里面哪一部分是真正特殊的,哪一部分是共享语汇?</em>特殊的那部分生产昂贵、难以自动化、受法律保护;共享的那部分廉价、可自动化、免费。</p>
+<p>生成式 AI 做的事,是<strong>把这条边界大幅推向第二类</strong>。从图库摄影的价格到测试套件的设计,下游发生的一切都是对这次推移的调整。</p>
+</div>
+<div lang="en">
+<p>In each row, the left column is <strong>what survives averaging or specification</strong>, and the right column is <strong>what requires irreducible, individual, non-substitutable state</strong>.</p>
+<p>This is not a coincidence of framing. Automation, market value and copyright are all answering the same underlying question in different registers: <em>what part of this is genuinely particular, and what part is shared vocabulary?</em> The particular is expensive to produce, hard to automate, and legally protected. The shared is cheap, automatable and free.</p>
+<p>What generative AI did was <strong>move the boundary sharply toward the second category</strong> — and everything downstream, from stock photography prices to test-suite design, is an adjustment to that move.</p>
+</div>
+
+<!-- ============ CLOSING ============ -->
+<h2 id="end"><span lang="zh">结语</span><span lang="en">Closing</span></h2>
+
+<div lang="zh">
+<p><strong>下限本身已经很可观。</strong>即使假设 AI 支出从今天起持平,<span class="k80">H₈₀</span> 每两到三年翻倍会把十二小时跨度推到 2030 年前后。一整天定义清晰的工程工作变成可靠可交付,足以重组这个行业——不是通过去掉人,而是把人类工作的单位从<em>写代码</em>移到<em>定义任务和验收结果</em>。</p>
+<p><strong>上限不可知,别再试图择时。</strong>2030 年的区间从一个 Markdown 编辑器跨到 Stardew Valley。十八个月以内可以按趋势延续来规划;三年以上的任何安排,都应该在三种情景下都不崩盘。</p>
+<p><strong>你现在能做的事与模型能力正交,所以它会复利。</strong>验证基础设施、真正的规格、为廉价判断而设计的检查点——这些既立即见效,又随每一次模型发布按比例放大,因为它们把瓶颈挪到了别处。不做这些,模型再强你也吃不到,因为你的审查带宽是常数。</p>
+</div>
+<div lang="en">
+<p><strong>The floor is already significant.</strong> Even assuming AI spending flatlines today, <span class="k80">H₈₀</span> doubling every two to three years puts twelve-hour horizons around 2030. A full day of well-specified engineering work becoming reliably delegable is enough to reorganize the profession — not by removing people, but by shifting the unit of human work from <em>writing code</em> to <em>specifying tasks and accepting results</em>.</p>
+<p><strong>The ceiling is unknowable; stop trying to time it.</strong> The 2030 spread runs from a Markdown editor to Stardew Valley. Plan on trend continuation inside eighteen months. Make anything beyond three years survive all three scenarios.</p>
+<p><strong>What you can do now is orthogonal to model capability, which is why it compounds.</strong> Verification infrastructure, real specifications, and checkpoints designed for cheap judgement pay off immediately <em>and</em> scale with every future release, because they move the bottleneck elsewhere. Skip them and better models will not help you, because your review bandwidth is a constant.</p>
+</div>
+
+<div class="pull" style="margin-top:36px;border-left-width:4px">
+<p lang="zh"><span lang="zh" style="display:block;font-size:.86em;color:var(--ink-mute);margin-bottom:8px">最后一个自测</span>拿出你最近做的三件事,对每一件问:<strong>如果没有人看过它,有什么机制会发现那个错误?</strong>凡是答不上来的地方,就是你真正的天花板——不是图上那条。</p>
+<p lang="en"><span lang="en" style="display:block;font-size:.86em;color:var(--ink-mute);margin-bottom:8px">One diagnostic</span>Take the last three things you built and ask of each: <strong>if no human looked at it, what mechanism would have caught the mistake?</strong> Wherever there is no answer, that is your actual ceiling — not the one on the chart.</p>
+</div>
+
+<footer>
+<p style="font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--ink)"><span lang="zh">来源</span><span lang="en">Sources</span></p>
+<ul>
+<li>METR, <em>Task-Completion Time Horizons of Frontier AI Models</em> (Time Horizon 1.1, May 2026) — <a href="https://metr.org/time-horizons/">metr.org/time-horizons</a></li>
+<li>Kwa et al., <em>Measuring AI Ability to Complete Long Tasks</em>, NeurIPS 2025 — <a href="https://arxiv.org/abs/2503.14499">arXiv:2503.14499</a></li>
+<li>Whitfill, Snodin &amp; Becker, <em>Forecasting AI Time Horizon Under Compute Slowdowns</em> — <a href="https://arxiv.org/abs/2511.19492">arXiv:2511.19492</a></li>
+<li>Epoch AI, <em>Trends in Artificial Intelligence</em> — <a href="https://epoch.ai/trends">epoch.ai/trends</a></li>
+<li>Ho et al., <em>Algorithmic Progress in Language Models</em> — <a href="https://arxiv.org/abs/2403.05812">arXiv:2403.05812</a></li>
+<li><span lang="zh">SWE-bench Verified / Pro 排行榜;SWE-ABS 对抗性基准补强</span><span lang="en">SWE-bench Verified / Pro leaderboards; SWE-ABS adversarial benchmark strengthening</span></li>
+<li>RIAA v. Suno (D. Mass.); RIAA v. Udio (S.D.N.Y.); GEMA v. Suno (Munich Regional Court I, 2026-07-31)</li>
+<li><em>Thaler v. Perlmutter</em>; <em>Larrikin Music v. EMI</em> (FCA 2010); <em>Skidmore v. Led Zeppelin</em> (9th Cir. 2020); <em>Bright Tunes v. Harrisongs</em> (S.D.N.Y. 1976)</li>
+</ul>
+<p style="margin-top:20px;color:var(--ink-mute);font-size:12.5px"><span lang="zh">本报告为技术与经济分析,不构成法律意见。数据截至 2026 年 9 月,该领域变动迅速。</span><span lang="en">This report is technical and economic analysis, not legal advice. Data current to September 2026; this field moves quickly.</span></p>
+</footer>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+function setLang(l){
+  document.documentElement.setAttribute('data-lang',l);
+  document.documentElement.setAttribute('lang',l);
+  document.getElementById('b-zh').setAttribute('aria-pressed', l==='zh');
+  document.getElementById('b-en').setAttribute('aria-pressed', l==='en');
+  document.title = l==='zh' ? '读懂 METR 曲线 — 技术研究报告' : 'Reading the METR Curve — Technical Research Report';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  if (window.renderMathInElement){
+    renderMathInElement(document.body,{
+      delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+      throwOnError:false
+    });
+  }
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(a){ a.classList.remove('on'); });
+          var i = secs.indexOf(e.target);
+          if(i>-1) links[i].classList.add('on');
+        }
+      });
+    },{rootMargin:'-10% 0px -80% 0px'});
+    secs.forEach(function(s){ if(s) io.observe(s); });
+  }
+});
+</script>
+</body>
+</html>
